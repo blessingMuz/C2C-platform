@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory | Ubuntu Market</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="seller-shared.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-name">Ubuntu Market</div>
+    <div class="brand-sub">Seller Panel</div>
+  </div>
+  <div class="seller-avatar">
+    <div class="avatar-circle" id="sb-avatar">S</div>
+    <div class="avatar-info">
+      <div class="av-name" id="sb-name">Seller</div>
+      <div class="av-role">Seller</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <ul>
+      <li><a href="sellerDash.html"> Dashboard</a></li>
+      <li><a href="AddProd.html"> Add Product</a></li>
+      <li><a href="ManageProd.php">Manage Products</a></li>
+    </ul>
+    <div class="nav-section-label">Operations</div>
+    <ul>
+      <li><a href="inventory.html" class="active">Inventory</a></li>
+      <li><a href="sellerOrders.html"> Orders</a></li>
+      <li><a href="sellerMess.php">Messages</a></li>
+    </ul>
+    <div class="nav-section-label">Account</div>
+    <ul>
+      <li><a href="Sellerprofile.html"> Profile</a></li>
+      <li><a href="help.php">Help</a></li>
+    </ul>
+  </nav>
+  <div class="sidebar-bottom">
+    <a href="logout.php"> Logout</a>
+  </div>
+</div>
+
+<div class="main-content">
+<div class="page-body">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Inventory</h1>
+      <p>Track and manage your stock levels in real time</p>
+    </div>
+    <div class="topbar-right">
+      <div class="badge-pill" id="low-stock-count">Loading...</div>
+    </div>
+  </div>
+
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="stat-label">Total Products</div>
+      <div class="stat-value" id="total-products">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">In Stock</div>
+      <div class="stat-value green" id="in-stock">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Low Stock</div>
+      <div class="stat-value red" id="low-stock">—</div>
+      <div class="stat-sub">Below 5 units</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Out of Stock</div>
+      <div class="stat-value red" id="out-stock">—</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h2>Stock Levels</h2>
+      <div class="search-box" style="margin:0;width:240px;">
+        
+        <input type="text" id="inv-search" placeholder="Search products..."
+               oninput="filterInventory()" style="padding:8px 8px 8px 34px;">
+      </div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Status</th>
+            <th>Update Stock</th>
+          </tr>
+        </thead>
+        <tbody id="inventory-body">
+          <tr><td colspan="6" style="text-align:center;color:#aaa;padding:30px;">Loading inventory...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<footer class="seller-footer">
+  <p>&copy; 2026 Ubuntu Market &nbsp;|&nbsp;
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </p>
+</footer>
+</div>
+
+<script>
+let allInventory = [];
+
+// Dynamic Profile Sync Logic Engine
+function loadSidebarProfile() {
+  fetch('getProfile.php')
+    .then(response => response.json())
+    .then(data => {
+      if (!data || data.status === 'login' || !data.name) {
+        window.location.href = 'login.html';
+        return;
+      }
+      document.getElementById('sb-name').innerText = data.name;
+      document.getElementById('sb-avatar').innerText = data.name.charAt(0).toUpperCase();
+    })
+    .catch(err => {
+      console.log("Could not load dynamic sidebar credentials.");
+    });
+}
+
+function loadInventory(){
+  fetch('getSellerProducts.php')
+  .then(r => r.json())
+  .then(products => {
+    allInventory = products;
+
+    const total   = products.length;
+    
+    // Convert stock to integer safely for  calculations
+    const low     = products.filter(p => {
+      const s = parseInt(p.stock, 10) || 0;
+      return s > 0 && s < 5;
+    }).length;
+    
+    const outOf   = products.filter(p => (parseInt(p.stock, 10) || 0) === 0).length;
+    const inStock = total - low - outOf;
+
+    document.getElementById('total-products').innerText = total;
+    document.getElementById('in-stock').innerText       = inStock;
+    document.getElementById('low-stock').innerText      = low;
+    document.getElementById('out-stock').innerText      = outOf;
+    document.getElementById('low-stock-count').innerText =
+      low > 0 ? `${low} Low Stock Items` : ' All Stock Healthy';
+
+    renderInventory(products);
+  });
+}
+
+function renderInventory(products){
+  const tbody = document.getElementById('inventory-body');
+  if(!products.length){
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#aaa;padding:30px;">No products found.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = products.map(p => {
+    // Force stock to be a clean number type
+    const stock  = parseInt(p.stock, 10) || 0;
+    
+    // Strict comparison will now work flawlessly
+    const status = stock === 0 ? '<span class="badge badge-cancelled">Out of Stock</span>'
+                 : stock < 5  ? '<span class="badge badge-low">Low Stock</span>'
+                               : '<span class="badge badge-in-stock">In Stock</span>';
+    return `
+      <tr>
+        <td><strong>${p.name}</strong></td>
+        <td style="text-transform:capitalize;">${p.category}</td>
+        <td>R${parseFloat(p.price).toFixed(2)}</td>
+        <td><strong>${stock}</strong> units</td>
+        <td>${status}</td>
+        <td>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="number" id="stock-${p.id}" value="${stock}" min="0"
+                   style="width:70px;padding:6px;border:1px solid #ddd;border-radius:6px;font-size:13px;">
+            <button class="btn btn-dark" onclick="updateStock(${p.id})"
+                    style="padding:6px 14px;font-size:12px;">Update</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function filterInventory(){
+  const q = document.getElementById('inv-search').value.toLowerCase();
+  renderInventory(allInventory.filter(p => p.name.toLowerCase().includes(q)));
+}
+
+function updateStock(id){
+  const qty = document.getElementById('stock-' + id).value;
+  fetch('updateStock.php', {
+    method: 'POST',
+    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+    body: `product_id=${id}&stock=${qty}`
+  })
+  .then(r => r.json())
+  .then(d => {
+    if(d.status === 'success'){
+      // Flash green
+      const input = document.getElementById('stock-' + id);
+      input.style.borderColor = '#16a34a';
+      setTimeout(() => { input.style.borderColor = '#ddd'; loadInventory(); }, 800);
+    } else {
+      alert('Error updating stock.');
+    }
+  });
+}
+
+// Initialization 
+loadSidebarProfile();
+loadInventory();
+setInterval(loadInventory, 30000);
+</script>
+</body>
+</html>

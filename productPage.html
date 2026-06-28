@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shop | Ubuntu Market</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+   
+    html, body {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+    }
+    main {
+      flex: 1 0 auto;
+      padding: 24px;  
+    }
+    footer {
+      flex-shrink: 0; 
+    }
+
+    .back-link-container {
+      margin-bottom: 16px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #000000;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .back-link:hover {
+      opacity: 0.7;
+      transform: translateX(-4px); 
+    }
+    .back-arrow-svg {
+      width: 16px;
+      height: 16px;
+      stroke-width: 2.5;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <nav class="navbar">
+    <h1 class="logo">Ubuntu Market</h1>
+    <input type="text" id="search" placeholder="Search products..." onkeyup="searchProducts()">
+    <ul class="nav-links">
+      <ul class="nav-links">
+  <li><a href="index.html" class="active">Home</a></li>
+  <li><a href="productPage.html">Shop</a></li>
+  
+  <li><a href="dashboard.php">Dashboard</a></li>
+  
+  <li><a href="help.php">Help</a></li>
+  <li><a href="login.html">Login</a></li>
+  <li><a href="register.html">Register</a></li>
+  <li><a href="Shoppingcart.html" class="cart-link">Cart</a></li>
+</ul>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <div class="back-link-container">
+    <a href="index.html" class="back-link">
+      <svg class="back-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+      </svg>
+      Back to Home
+    </a>
+  </div>
+
+  <h2>Browse Products</h2>
+
+  <div style="margin-bottom:20px;">
+    <select id="categoryFilter" onchange="loadProducts()">
+      <option value="">All Categories</option>
+      <option value="clothing">Clothing</option>
+      <option value="electronics">Electronics</option>
+      <option value="shoes">Shoes</option>
+      <option value="furniture">Furniture</option>
+      <option value="other">Other</option>
+    </select>
+  </div>
+
+  <div class="grid" id="product-list">
+    <p>Loading products...</p>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2026 Ubuntu Market</p>
+  <a href="about.html">About</a> |
+  <a href="contact.html">Contact</a>
+</footer>
+
+<script>
+// Parse URL parameters for initial filtering setup
+const urlParams = new URLSearchParams(window.location.search);
+if(urlParams.get('search')) document.getElementById('search').value = urlParams.get('search');
+if(urlParams.get('category')) document.getElementById('categoryFilter').value = urlParams.get('category');
+
+// Load products from database
+function loadProducts(){
+  const search   = document.getElementById('search').value;
+  const category = document.getElementById('categoryFilter').value;
+
+  fetch(`getProd.php?search=${search}&category=${category}`)
+    .then(res => res.json())
+    .then(products => {
+      const list = document.getElementById('product-list');
+
+      if(products.length === 0){
+        list.innerHTML = '<p>No products found.</p>';
+        return;
+      }
+
+      list.innerHTML = products.map(p => `
+        <div class="card" data-name="${p.name}">
+          <img src="images/${p.image}" alt="${p.name}" 
+               onerror="this.src='images/placeholder.jpg'"
+               style="width:100%; height:200px; object-fit:cover;">
+          <h3>${p.name}</h3>
+          <p class="price">R${parseFloat(p.price).toFixed(2)}</p>
+          <p class="desc">${p.description}</p>
+          <small>Sold by: ${p.seller_name}</small>
+          <div class="buttons">
+            <button onclick="handleAddToCart(${p.id}, '${p.name.replace(/'/g, "\\'")}')">Add to Cart</button>
+            <button onclick="window.location.href='productDetail.html?id=${p.id}'">View</button>
+            <button onclick="handleMessageSeller(${p.seller_id}, ${p.id})">Message Seller</button>
+          </div>
+        </div>
+      `).join('');
+    })
+    .catch(err => {
+      document.getElementById('product-list').innerHTML = '<p>Error loading products.</p>';
+    });
+
+}
+
+// Search function
+function searchProducts(){
+  loadProducts();
+}
+
+// Add to Cart 
+function handleAddToCart(productId, name) {
+  fetch('cart.php', {
+    method:      'POST',
+    credentials: 'same-origin',
+    headers:     { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body:        'product_id=' + productId
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.status === 'login'){
+      window.location.href = 'login.html?redirect=productPage.html';
+    } else if(data.status === 'success'){
+      showToast(name + ' added to cart! \u{1F6D2}');
+    } else {
+      alert('Something went wrong. Please try again.');
+    }
+  })
+  .catch(() => alert('Network error. Please try again.'));
+}
+
+// Toast notification 
+function showToast(msg){
+  let toast = document.getElementById('cart-toast');
+  if(!toast){
+    toast = document.createElement('div');
+    toast.id = 'cart-toast';
+    toast.style.cssText = [
+      'position:fixed','bottom:28px','left:50%','transform:translateX(-50%)',
+      'background:#000','color:#fff','padding:12px 24px','border-radius:10px',
+      'font-size:14px','font-weight:600','z-index:9999',
+      'box-shadow:0 4px 16px rgba(0,0,0,0.2)','transition:opacity 0.4s'
+    ].join(';');
+    document.body.appendChild(toast);
+  }
+  toast.innerText = msg;
+  toast.style.opacity = '1';
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, 2500);
+}
+
+// Guarded Message Seller action
+function handleMessageSeller(sellerId, productId) {
+  // Directly ask the backend if the user is logged in
+  fetch('checkSession.php')
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.user_id) {
+        // User is logged in! Send them straight to the buyer messages page
+        window.location.href = `buyerMess.php?seller_id=${sellerId}&product_id=${productId}`;
+      } else {
+        alert('Please login to message sellers on Ubuntu Market!');
+        window.location.href = 'login.html';
+      }
+    })
+    .catch(err => {
+      console.error("Auth check failed:", err);
+    });
+}
+
+loadProducts();
+</script>
+
+</body>
+</html>

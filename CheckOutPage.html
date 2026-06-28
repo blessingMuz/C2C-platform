@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | Ubuntu Market</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+   
+    .checkout-wrapper {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+   
+    .checkout-left {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .checkout-panel {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      border: 1px solid #f0f0f0;
+    }
+
+    .checkout-panel h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #e0e0e0;
+      border-radius: 9px;
+      font-size: 14px;
+      font-family: 'DM Sans', Arial, sans-serif;
+      background: #fafafa;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      color: #1a1a1a;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: #000;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    
+    .payment-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+
+    .payment-option:hover {
+      border-color: #000;
+      background: #fafafa;
+    }
+
+    .payment-option.selected {
+      border-color: #000;
+      background: #f9f9f9;
+    }
+
+    .payment-option input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #ff6600;
+      flex-shrink: 0;
+    }
+
+    .payment-option-info {
+      flex: 1;
+    }
+
+    .payment-option-name {
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+
+    .payment-option-desc {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .payment-option-logo {
+      font-size: 24px;
+    }
+
+    .payment-badge {
+      background: #e8f5e9;
+      color: #16a34a;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    
+    .submit-checkout {
+      width: 100%;
+      padding: 16px;
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'DM Sans', Arial, sans-serif;
+      transition: background 0.2s, transform 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .submit-checkout:hover {
+      background: #ff6600;
+      transform: translateY(-1px);
+    }
+
+    .submit-checkout:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    
+    .order-summary-panel {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      border: 1px solid #f0f0f0;
+      position: sticky;
+      top: 80px;
+    }
+
+    .order-summary-panel h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f9f9f9;
+      font-size: 14px;
+    }
+
+    .summary-item:last-of-type { border-bottom: none; }
+
+    .summary-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .summary-item img {
+      width: 44px;
+      height: 44px;
+      object-fit: cover;
+      border-radius: 7px;
+      border: 1px solid #eee;
+    }
+
+    .summary-item-name { font-weight: 600; font-size: 13px; }
+    .summary-item-qty  { font-size: 12px; color: #aaa; }
+
+    .summary-divider {
+      border: none;
+      border-top: 1px solid #f0f0f0;
+      margin: 14px 0;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 1px;
+      color: #000;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 2px solid #000;
+    }
+
+    .empty-cart-msg {
+      text-align: center;
+      padding: 40px 20px;
+      color: #aaa;
+    }
+
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #888;
+      margin-top: 16px;
+      justify-content: center;
+    }
+
+    
+    .success-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-overlay.show { display: flex; }
+
+    .success-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 48px 40px;
+      text-align: center;
+      max-width: 440px;
+      width: 90%;
+      animation: popIn 0.3s ease;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .success-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+
+    .success-box h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .success-box p {
+      color: #666;
+      font-size: 15px;
+      margin-bottom: 24px;
+    }
+
+    .success-box .order-id {
+      background: #f5f5f5;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 13px;
+      color: #333;
+      margin-bottom: 24px;
+      font-weight: 600;
+    }
+
+    
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 900px) {
+      .checkout-wrapper {
+        grid-template-columns: 1fr;
+      }
+      .order-summary-panel {
+        position: static;
+        order: -1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+
+<header>
+  <nav class="navbar">
+    <div class="logo">Ubuntu Market</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="productPage.html">Shop</a></li>
+      <li><a href="Shoppingcart.html">Cart</a></li>
+      <li><a href="dashboard.php">Dashboard</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<div class="checkout-wrapper">
+
+  
+  <div class="checkout-left">
+
+    
+    <div class="checkout-panel">
+      <h2>Shipping Details</h2>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="full-name" placeholder="e.g.name surname" required>
+        </div>
+        <div class="form-group">
+          <label>Email Address *</label>
+          <input type="email" id="email" placeholder="you@email.com" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <input type="tel" id="phone" placeholder="e.g. 065 231 2997" required>
+      </div>
+
+      <div class="form-group">
+        <label>Street Address *</label>
+        <input type="text" id="address" placeholder="e.g. 12 Main Street" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>City *</label>
+          <input type="text" id="city" placeholder="e.g. Johannesburg" required>
+        </div>
+        <div class="form-group">
+          <label>Province *</label>
+          <select id="province" required>
+            <option value="">Select Province</option>
+            <option>Gauteng</option>
+            <option>Western Cape</option>
+            <option>KwaZulu-Natal</option>
+            <option>Eastern Cape</option>
+            <option>Northern Cape</option>
+            <option>North West</option>
+            <option>Limpopo</option>
+            <option>Mpumalanga</option>
+            <option>Free State</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Postal Code</label>
+        <input type="text" id="postal" placeholder="e.g. 1501">
+      </div>
+
+      <div class="form-group">
+        <label>Delivery Notes (Optional)</label>
+        <textarea id="notes" placeholder="e.g. Leave at the gate, call when nearby..."></textarea>
+      </div>
+    </div>
+
+   
+    <div class="checkout-panel">
+      <h2>Delivery Method</h2>
+
+      <div class="payment-options">
+
+        
+        <label class="payment-option selected" onclick="selectDelivery('standard', this)">
+          <input type="radio" name="delivery" value="standard" checked>
+          
+          <div class="payment-option-info">
+            <div class="payment-option-name">Standard Delivery</div>
+            <div class="payment-option-desc">3–5 business days</div>
+          </div>
+          <strong>R100.00</strong>
+        </label>
+
+        
+        <label class="payment-option" onclick="selectDelivery('express', this)">
+          <input type="radio" name="delivery" value="express">
+          
+          <div class="payment-option-info">
+            <div class="payment-option-name">Express Delivery</div>
+            <div class="payment-option-desc">1–2 business days</div>
+          </div>
+          <strong>R180.00</strong>
+        </label>
+
+        
+        <label class="payment-option" onclick="selectDelivery('pickup', this)">
+          <input type="radio" name="delivery" value="pickup">
+          
+          <div class="payment-option-info">
+            <div class="payment-option-name">Click &amp; Collect</div>
+            <div class="payment-option-desc">Pick up from our location — Free</div>
+          </div>
+          <strong style="color:#16a34a;">FREE</strong>
+        </label>
+
+      </div>
+    </div>
+
+   
+    <div class="checkout-panel">
+      <h2>Payment Method</h2>
+
+      <div class="payment-options">
+
+        <!-- PAYFAST -->
+        <label class="payment-option selected" onclick="selectPayment('payfast', this)">
+          <input type="radio" name="payment" value="payfast" checked>
+         
+          <div class="payment-option-info">
+            <div class="payment-option-name">PayFast</div>
+            <div class="payment-option-desc">EFT, Credit Card, Instant EFT — South Africa's #1</div>
+          </div>
+          <span class="payment-badge">Recommended</span>
+        </label>
+
+        
+        <label class="payment-option" onclick="selectPayment('paypal', this)">
+          <input type="radio" name="payment" value="paypal">
+        
+          <div class="payment-option-info">
+            <div class="payment-option-name">PayPal</div>
+            <div class="payment-option-desc">Pay securely with your PayPal account</div>
+          </div>
+        </label>
+
+        
+        <label class="payment-option" onclick="selectPayment('cod', this)">
+          <input type="radio" name="payment" value="cod">
+          
+          <div class="payment-option-info">
+            <div class="payment-option-name">Cash </div>
+            <div class="payment-option-desc">Pay when you collect your order</div>
+          </div>
+        </label>
+
+      </div>
+    </div>
+
+  
+    <button class="submit-checkout" onclick="placeOrder()" id="submit-btn">
+      <span id="btn-text"> Complete Payment</span>
+      <div class="spinner" id="spinner"></div>
+    </button>
+
+    <div class="secure-badge">
+      Your payment info is encrypted and secure
+    </div>
+
+  </div>
+
+  
+  <div class="order-summary-panel">
+    <h2>Order Summary</h2>
+
+    <div id="summary-items">
+      <p style="color:#aaa; text-align:center; padding:20px;">Loading cart...</p>
+    </div>
+
+    <hr class="summary-divider">
+
+    
+    <div id="free-delivery-banner" style="display:none; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:10px 14px; font-size:12px; color:#15803d; margin-bottom:12px; line-height:1.5;">
+       <span id="free-delivery-msg">1500</span>
+    </div>
+
+    <div class="summary-row">
+      <span>Subtotal</span>
+      <span id="subtotal">R0.00</span>
+    </div>
+    <div class="summary-row">
+      <span>Delivery Fee</span>
+      <span id="delivery-fee">R100.00</span>
+    </div>
+    <div class="summary-row" id="free-delivery-row" style="display:none; color:#16a34a;">
+      <span>Free Delivery Saving</span>
+      <span id="free-delivery-saving">-R0.00</span>
+    </div>
+    <div class="summary-row" id="discount-row" style="display:none; color:#16a34a;">
+      <span>Discount (<span id="discount-label"></span>)</span>
+      <span id="discount-amount">-R0.00</span>
+    </div>
+    <div class="summary-row" id="vat-row">
+      <span>VAT (15%)</span>
+      <span id="vat-amount">R0.00</span>
+    </div>
+
+    <div class="summary-total">
+      <span>Total</span>
+      <span id="grand-total">R0.00</span>
+    </div>
+
+    
+    <div style="margin-top:20px;">
+      <div style="font-size:12px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">
+        Coupon Code
+      </div>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="coupon-input" placeholder="Enter code"
+               onkeydown="if(event.key==='Enter') applyCoupon()"
+               style="flex:1;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;outline:none;font-family:'DM Sans',Arial,sans-serif;text-transform:uppercase;">
+        <button onclick="applyCoupon()"
+                style="padding:10px 16px;background:#000;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-weight:600;font-family:'DM Sans',Arial,sans-serif;">
+          Apply
+        </button>
+        <button onclick="removeCoupon()" id="remove-coupon-btn"
+                style="display:none;padding:10px 14px;background:#fee2e2;color:#dc2626;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-weight:600;font-family:'DM Sans',Arial,sans-serif;">
+          ✕
+        </button>
+      </div>
+      <p id="coupon-msg" style="font-size:12px;margin-top:6px;"></p>
+    </div>
+
+  </div>
+
+</div>
+</main>
+
+
+<div class="success-overlay" id="success-overlay">
+  <div class="success-box">
+    
+    <h2>Order Placed!</h2>
+    <p>Thank you for your order. You'll receive a confirmation shortly.</p>
+    <div class="order-id" id="success-order-id">Order #—</div>
+    <div id="payment-instructions" style="margin-bottom:20px;"></div>
+    <a href="productPage.html"
+       style="display:block;background:#000;color:#fff;padding:14px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;transition:background 0.2s;"
+       onmouseover="this.style.background='#ff6600'"
+       onmouseout="this.style.background='#000'">
+      Continue Shopping
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2026 Ubuntu Market &nbsp;|&nbsp;
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </p>
+</footer>
+
+<script>
+const DELIVERY_OPTIONS = {
+  standard: { label: 'Standard Delivery (3–5 days)', price: 100 },
+  express:  { label: 'Express Delivery (1–2 days)',  price: 180 },
+  pickup:   { label: 'Click & Collect',              price: 0   },
+};
+const VAT_RATE        = 0.15;
+let   cartItems       = [];
+let   subtotal        = 0;
+let   discount        = 0;
+let   selectedPayment  = 'payfast';
+let   selectedDelivery = 'standard';
+
+// Load cart from database 
+function loadCart(){
+  fetch('getCart.php')
+  .then(r => r.json())
+  .then(data => {
+    if(data.status === 'login'){
+      window.location.href = 'login.html?redirect=CheckOutPage.html';
+      return;
+    }
+
+    cartItems = data;
+
+    if(!cartItems.length){
+      document.getElementById('summary-items').innerHTML =
+        '<div class="empty-cart-msg"> Your cart is empty.<br><a href="productPage.html" style="color:#ff6600;">Start shopping</a></div>';
+      document.getElementById('submit-btn').disabled = true;
+      updateTotals();
+      return;
+    }
+
+    subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    updateTotals();
+    renderSummaryItems();
+  })
+  .catch(() => {
+    document.getElementById('summary-items').innerHTML =
+      '<p style="color:#aaa;text-align:center;">Error loading cart.</p>';
+  });
+}
+
+function renderSummaryItems(){
+  document.getElementById('summary-items').innerHTML = cartItems.map(item => `
+    <div class="summary-item">
+      <div class="summary-item-left">
+        <img src="images/${item.image}" onerror="this.src='images/placeholder.jpg'" alt="${item.name}">
+        <div>
+          <div class="summary-item-name">${item.name}</div>
+          <div class="summary-item-qty">x${item.quantity}</div>
+        </div>
+      </div>
+      <strong>R${(item.price * item.quantity).toFixed(2)}</strong>
+    </div>
+  `).join('');
+}
+
+function updateTotals(){
+  const deliveryFee = getEffectiveDeliveryFee();
+  const vat         = subtotal * VAT_RATE;
+  const total       = subtotal + deliveryFee + vat - discount;
+
+  document.getElementById('subtotal').innerText     = 'R' + subtotal.toFixed(2);
+  document.getElementById('delivery-fee').innerText = deliveryFee === 0 ? 'FREE' : 'R' + deliveryFee.toFixed(2);
+  document.getElementById('vat-amount').innerText   = 'R' + vat.toFixed(2);
+  document.getElementById('grand-total').innerText  = 'R' + Math.max(0, total).toFixed(2);
+
+  // Keep the free-delivery-row saving amount in sync when delivery option changes
+  if(freeDelivery){
+    const saved = DELIVERY_OPTIONS[selectedDelivery].price;
+    document.getElementById('free-delivery-saving').innerText = '-R' + saved.toFixed(2);
+  }
+
+  updateFreeDeliveryBanner();
+}
+
+// Delivery selection
+function selectDelivery(option, el){
+  selectedDelivery = option;
+  document.querySelectorAll('[name="delivery"]')
+    .forEach(r => r.closest('.payment-option').classList.remove('selected'));
+  el.classList.add('selected');
+  updateTotals();
+}
+
+// Payment selection 
+function selectPayment(method, el){
+  selectedPayment = method;
+  document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+
+  const btn = document.getElementById('btn-text');
+  if(method === 'payfast')   btn.innerText = 'Pay with PayFast';
+  if(method === 'paypal')    btn.innerText = 'Pay with PayPal';
+  if(method === 'cod')       btn.innerText =  'Place Order (Pay on Delivery)';
+}
+
+// Coupon & Free Delivery 
+const FREE_DELIVERY_THRESHOLD = 1500;
+
+let appliedCoupon = null;  // holds the validated coupon object returned from DB
+let freeDelivery  = false; // true when delivery should be waived
+
+function getEffectiveDeliveryFee(){
+  if(freeDelivery) return 0;
+  if(subtotal >= FREE_DELIVERY_THRESHOLD) return 0;
+  return DELIVERY_OPTIONS[selectedDelivery].price;
+}
+
+function updateFreeDeliveryBanner(){
+  const banner = document.getElementById('free-delivery-banner');
+  const msg    = document.getElementById('free-delivery-msg');
+
+  // Reset banner styles to green default
+  banner.style.background  = '#f0fdf4';
+  banner.style.borderColor = '#bbf7d0';
+  banner.style.color       = '#15803d';
+
+  if(freeDelivery){
+    banner.style.display = 'block';
+    msg.innerText = 'Free delivery applied with your coupon!';
+    return;
+  }
+
+  if(subtotal >= FREE_DELIVERY_THRESHOLD){
+    banner.style.display = 'block';
+    msg.innerText = 'You qualify for free delivery on orders over R1 500!';
+    return;
+  }
+
+  if(selectedDelivery !== 'pickup'){
+    const remaining = FREE_DELIVERY_THRESHOLD - subtotal;
+    banner.style.display     = 'block';
+    banner.style.background  = '#fffbeb';
+    banner.style.borderColor = '#fde68a';
+    banner.style.color       = '#92400e';
+    msg.innerText = `Spend R${remaining.toFixed(2)} more for free delivery!`;
+  } else {
+    banner.style.display = 'none';
+  }
+}
+
+function resetCouponState(){
+  discount      = 0;
+  freeDelivery  = false;
+  appliedCoupon = null;
+  document.getElementById('discount-row').style.display      = 'none';
+  document.getElementById('free-delivery-row').style.display = 'none';
+  document.getElementById('remove-coupon-btn').style.display = 'none';
+}
+
+function applyCoupon(){
+  const code  = document.getElementById('coupon-input').value.trim().toUpperCase();
+  const msgEl = document.getElementById('coupon-msg');
+
+  if(!code){
+    msgEl.style.color = '#dc2626';
+    msgEl.innerText   = ' Please enter a coupon code.';
+    return;
+  }
+
+  // Show checking state while we hit the server
+  msgEl.style.color = '#888';
+  msgEl.innerText   = 'Checking code...';
+  resetCouponState();
+
+  fetch('validateCoupon.php', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body:    `code=${encodeURIComponent(code)}&subtotal=${subtotal}`
+  })
+  .then(r => r.json())
+  .then(data => {
+
+    if(data.status !== 'valid'){
+      msgEl.style.color = '#dc2626';
+      msgEl.innerText   =  data.message;
+      updateTotals();
+      return;
+    }
+
+    // Valid — apply coupon
+    appliedCoupon = data;
+
+    if(data.type === 'percent'){
+      discount = (subtotal * data.value) / 100;
+      msgEl.style.color = '#16a34a';
+      msgEl.innerText   = ` ${data.value}% discount applied! (-R${discount.toFixed(2)})`;
+      document.getElementById('discount-label').innerText   = data.label;
+      document.getElementById('discount-amount').innerText  = '-R' + discount.toFixed(2);
+      document.getElementById('discount-row').style.display = 'flex';
+
+    } else if(data.type === 'free_delivery'){
+      freeDelivery = true;
+      const saved  = DELIVERY_OPTIONS[selectedDelivery].price;
+      msgEl.style.color = '#16a34a';
+      msgEl.innerText   = ` Free delivery applied! (saving R${saved.toFixed(2)})`;
+      document.getElementById('free-delivery-saving').innerText  = '-R' + saved.toFixed(2);
+      document.getElementById('free-delivery-row').style.display = 'flex';
+    }
+
+    document.getElementById('remove-coupon-btn').style.display = 'inline-block';
+    updateTotals();
+  })
+  .catch(() => {
+    msgEl.style.color = '#dc2626';
+    msgEl.innerText   = 'Could not verify code. Please try again.';
+  });
+}
+
+function removeCoupon(){
+  resetCouponState();
+  document.getElementById('coupon-input').value  = '';
+  document.getElementById('coupon-msg').innerText = '';
+  updateTotals();
+}
+
+// Validate form
+function validateForm(){
+  const fields = [
+    { id: 'full-name', label: 'Full Name' },
+    { id: 'email',     label: 'Email Address' },
+    { id: 'phone',     label: 'Phone Number' },
+    { id: 'address',   label: 'Street Address' },
+    { id: 'city',      label: 'City' },
+    { id: 'province',  label: 'Province' },
+  ];
+
+  for(const f of fields){
+    const el = document.getElementById(f.id);
+    if(!el.value.trim()){
+      el.focus();
+      el.style.borderColor = '#dc2626';
+      el.style.boxShadow   = '0 0 0 3px rgba(220,38,38,0.1)';
+      setTimeout(() => {
+        el.style.borderColor = '#e0e0e0';
+        el.style.boxShadow   = 'none';
+      }, 2000);
+      alert(`Please fill in your ${f.label}.`);
+      return false;
+    }
+  }
+
+  if(!cartItems.length){
+    alert('Your cart is empty!');
+    return false;
+  }
+
+  return true;
+}
+
+// Place Order 
+function placeOrder(){
+  if(!validateForm()) return;
+
+  const btn     = document.getElementById('submit-btn');
+  const spinner = document.getElementById('spinner');
+  const btnText = document.getElementById('btn-text');
+
+  btn.disabled         = true;
+  spinner.style.display = 'inline-block';
+  btnText.innerText     = 'Processing...';
+
+  const deliveryFee = getEffectiveDeliveryFee();
+  const vat         = subtotal * VAT_RATE;
+  const total       = subtotal + deliveryFee + vat - discount;
+
+  const orderData = {
+    full_name:       document.getElementById('full-name').value,
+    email:           document.getElementById('email').value,
+    phone:           document.getElementById('phone').value,
+    address:         document.getElementById('address').value,
+    city:            document.getElementById('city').value,
+    province:        document.getElementById('province').value,
+    postal_code:     document.getElementById('postal').value,
+    delivery_notes:  document.getElementById('notes').value,
+    payment_method:  selectedPayment,
+    delivery_method: selectedDelivery,
+    coupon_code:     appliedCoupon ? document.getElementById('coupon-input').value.trim().toUpperCase() : '',
+    subtotal:        subtotal,
+    delivery_fee:    deliveryFee,
+    vat:             vat,
+    discount:        discount,
+    total:           Math.max(0, total)
+  };
+
+  fetch('placeOrder.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(orderData)
+  })
+  .then(r => r.json())
+  .then(data => {
+    spinner.style.display = 'none';
+
+    if(data.status === 'success'){
+      document.getElementById('success-order-id').innerText = 'Order #' + data.order_id;
+
+      // Payment instructions
+      const instrEl = document.getElementById('payment-instructions');
+      if(selectedPayment === 'payfast'){
+        instrEl.innerHTML = `
+          <div style="background:#f0fdf4;border-radius:10px;padding:14px;font-size:13px;color:#15803d;margin-bottom:16px;">
+           Redirecting you to PayFast to complete payment...
+          </div>`;
+        // Submit PayFast form
+        setTimeout(() => submitPayFast(data.order_id, orderData), 1500);
+      } else if(selectedPayment === 'paypal'){
+        instrEl.innerHTML = `
+          <div style="background:#eff6ff;border-radius:10px;padding:14px;font-size:13px;color:#1d4ed8;margin-bottom:16px;">
+           Redirecting to PayPal to complete payment...
+          </div>`;
+        setTimeout(() => submitPayPal(data.order_id, orderData), 1500);
+      } else {
+        instrEl.innerHTML = `
+          <div style="background:#fff7ed;border-radius:10px;padding:14px;font-size:13px;color:#c2410c;margin-bottom:16px;">
+             Pay <strong>R${orderData.total.toFixed(2)}</strong> when your order arrives.<br>
+            Our team will contact you at <strong>${orderData.phone}</strong> to confirm delivery.
+          </div>`;
+      }
+
+      document.getElementById('success-overlay').classList.add('show');
+
+      // Clear cart
+      fetch('clearCart.php', { method: 'POST' });
+
+    } else if(data.status === 'login'){
+      window.location.href = 'login.html';
+    } else {
+      alert('Error placing order: ' + (data.message || 'Please try again.'));
+      btn.disabled          = false;
+      btnText.innerText     = 'Complete Payment';
+    }
+  })
+  .catch(() => {
+    alert('Network error. Please try again.');
+    btn.disabled          = false;
+    spinner.style.display = 'none';
+    btnText.innerText     = ' Complete Payment';
+  });
+}
+
+// PayFast Integration 
+const PAYFAST_CONFIG = {
+  merchant_id:  '10049391',          
+  merchant_key: '6ak9vittgw745',     
+  return_url:   window.location.origin + '/payfast-return.html',
+  cancel_url:   window.location.origin + '/CheckOutPage.html',
+  notify_url:   window.location.origin + '/payfastNotify.php',
+  sandbox:      true  
+};
+
+function submitPayFast(orderId, orderData){
+  const baseUrl = PAYFAST_CONFIG.sandbox
+    ? 'https://sandbox.payfast.co.za/eng/process'
+    : 'https://www.payfast.co.za/eng/process';
+
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = baseUrl;
+
+  const fields = {
+    merchant_id:  PAYFAST_CONFIG.merchant_id,
+    merchant_key: PAYFAST_CONFIG.merchant_key,
+    return_url:   PAYFAST_CONFIG.return_url,
+    cancel_url:   PAYFAST_CONFIG.cancel_url,
+    notify_url:   PAYFAST_CONFIG.notify_url,
+    name_first:   orderData.full_name.split(' ')[0],
+    name_last:    orderData.full_name.split(' ').slice(1).join(' ') || '-',
+    email_address:orderData.email,
+    m_payment_id: 'ORDER_' + orderId,
+    amount:       orderData.total.toFixed(2),
+    item_name:    'Ubuntu Market Order #' + orderId,
+    item_description: 'Order from Ubuntu Market'
+  };
+
+  Object.entries(fields).forEach(([key, value]) => {
+    const input = document.createElement('input');
+    input.type  = 'hidden';
+    input.name  = key;
+    input.value = value;
+    form.appendChild(input);
+  });
+
+  document.body.appendChild(form);
+  form.submit();
+}
+
+// PayPal Integration 
+const PAYPAL_CONFIG = {
+  client_id: 'AaFFO8JeIR-kfj30wDSJnZWWnx-oKXtnO86s_VX8Uzs7ccoQgZO2cqC8jO0FnPOHs1KxmeE3Zk3dvnhF', 
+  currency:  'USD' 
+};
+
+function submitPayPal(orderId, orderData){
+  // Load PayPal SDK dynamically
+  const script    = document.createElement('script');
+  script.src      = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CONFIG.client_id}&currency=${PAYPAL_CONFIG.currency}`;
+  script.onload   = () => {
+    // Keep your visual layout showing Rands (R) to your buyers natively
+    document.getElementById('success-overlay').innerHTML = `
+      <div class="success-box" style="max-width:500px;">
+        <h2 style="font-family:'Bebas Neue',sans-serif;font-size:28px;margin-bottom:16px;">Complete PayPal Payment</h2>
+        <p style="color:#666;margin-bottom:20px;">Order #${orderId} — Total: R${orderData.total.toFixed(2)}</p>
+        <div id="paypal-button-container"></div>
+        <p style="margin-top:16px;font-size:13px;color:#aaa;">
+          <a href="CheckOutPage.html" style="color:#ff6600;">← Go back</a>
+        </p>
+      </div>`;
+
+    paypal.Buttons({
+      createOrder: (data, actions) => {
+        // Convert your local price data into an accepted currency (e.g., USD conversion rate)
+        
+        const convertedTotalUSD = (orderData.total / 18.5).toFixed(2);
+
+        return actions.order.create({
+          purchase_units: [{
+            amount: { 
+              value: convertedTotalUSD, // Passes the valid numerical conversion payload
+              currency_code: 'USD'       // Formats to an approved PayPal gateway currency
+            },
+            description: 'Ubuntu Market Order #' + orderId
+          }]
+        });
+      },
+      onApprove: (data, actions) => actions.order.capture().then(details => {
+        fetch('updatePayment.php', {
+          method: 'POST',
+          headers: {'Content-Type':'application/x-www-form-urlencoded'},
+          body: `order_id=${orderId}&payment_id=${details.id}&status=paid`
+        });
+        document.getElementById('success-overlay').innerHTML = `
+          <div class="success-box">
+            <div style="font-size:64px;"></div>
+            <h2 style="font-family:'Bebas Neue',sans-serif;font-size:36px;">Payment Success!</h2>
+            <p>PayPal payment confirmed for Order #${orderId}</p>
+            <a href="productPage.html" style="display:block;background:#000;color:#fff;padding:14px;border-radius:10px;text-decoration:none;font-weight:700;margin-top:16px;">
+              Continue Shopping
+            </a>
+          </div>`;
+      }),
+      onError: err => {
+        console.error("PayPal Pipeline Error Captured:", err);
+        alert('PayPal payment failed. Please try again.');
+      }
+    }).render('#paypal-button-container');
+  };
+  document.head.appendChild(script);
+}
+
+loadCart();
+</script>
+
+</body>
+</html>

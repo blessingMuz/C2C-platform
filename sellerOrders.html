@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders | Ubuntu Market</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="seller-shared.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-name">Ubuntu Market</div>
+    <div class="brand-sub">Seller Panel</div>
+  </div>
+  <div class="seller-avatar">
+    <div class="avatar-circle" id="sb-avatar">S</div>
+    <div class="avatar-info">
+      <div class="av-name" id="sb-name">Seller</div>
+      <div class="av-role">Seller</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <ul>
+      <li><a href="sellerDash.html"> Dashboard</a></li>
+      <li><a href="AddProd.html">Add Product</a></li>
+      <li><a href="ManageProd.php"> Manage Products</a></li>
+    </ul>
+    <div class="nav-section-label">Operations</div>
+    <ul>
+      <li><a href="inventory.html">Inventory</a></li>
+      <li><a href="sellerOrders.html" class="active">Orders</a></li>
+      <li><a href="sellerMess.php">Messages</a></li>
+    </ul>
+    <div class="nav-section-label">Account</div>
+    <ul>
+      <li><a href="Sellerprofile.html">Profile</a></li>
+      <li><a href="help.php">Help</a></li>
+    </ul>
+  </nav>
+  <div class="sidebar-bottom">
+    <a href="logout.php">Logout</a>
+  </div>
+</div>
+
+<div class="main-content">
+<div class="page-body">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Customer Orders</h1>
+      <p>Manage and track all incoming orders</p>
+    </div>
+    <div class="topbar-right">
+      <div class="badge-pill" id="pending-badge">Loading...</div>
+    </div>
+  </div>
+
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="stat-label">Total Orders</div>
+      <div class="stat-value" id="total-orders">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Pending</div>
+      <div class="stat-value orange" id="pending-count">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Shipped</div>
+      <div class="stat-value" style="color:#1d4ed8;" id="shipped-count">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Delivered</div>
+      <div class="stat-value green" id="delivered-count">—</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+    <button class="btn btn-dark" onclick="filterOrders('all')"       id="tab-all">All</button>
+    <button class="btn btn-ghost" onclick="filterOrders('pending')"  id="tab-pending">Pending</button>
+    <button class="btn btn-ghost" onclick="filterOrders('shipped')"  id="tab-shipped">Shipped</button>
+    <button class="btn btn-ghost" onclick="filterOrders('delivered')" id="tab-delivered">Delivered</button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h2>All Orders</h2>
+      <div class="search-box" style="margin:0;width:220px;">
+        
+        <input type="text" id="order-search" placeholder="Search orders..."
+               oninput="searchOrders()" style="padding:8px 8px 8px 34px;">
+      </div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Buyer</th>
+            <th>Product</th>
+            <th>Total</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="orders-body">
+          <tr><td colspan="7" style="text-align:center;color:#aaa;padding:30px;">Loading orders...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<footer class="seller-footer">
+  <p>&copy; 2026 Ubuntu Market &nbsp;|&nbsp;
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </p>
+</footer>
+</div>
+
+<script>
+let allOrders   = [];
+let activeFilter = 'all';
+
+function loadSidebarProfile() {
+  fetch('getProfile.php')
+    .then(response => response.json())
+    .then(data => {
+      if (!data || data.status === 'login' || !data.name) {
+        window.location.href = 'login.html';
+        return;
+      }
+      document.getElementById('sb-name').innerText = data.name;
+      document.getElementById('sb-avatar').innerText = data.name.charAt(0).toUpperCase();
+    })
+    .catch(err => {
+      console.log("Could not load dynamic sidebar credentials.");
+    });
+}
+
+function loadOrders(){
+  fetch('getSellerOrders.php')
+  .then(r => r.json())
+  .then(orders => {
+    
+    if (orders && orders.status === 'login') {
+        window.location.href = 'login.html'; 
+        return;
+    }
+    
+    if (!Array.isArray(orders)) {
+        console.error("Expected an array but got:", orders);
+        allOrders = [];
+        return;
+    }
+
+    allOrders = orders;
+
+    const total     = orders.length;
+    const pending   = orders.filter(o => o.status === 'pending').length;
+    const shipped   = orders.filter(o => o.status === 'shipped').length;
+    const delivered = orders.filter(o => o.status === 'delivered').length;
+
+    document.getElementById('total-orders').innerText   = total;
+    document.getElementById('pending-count').innerText  = pending;
+    document.getElementById('shipped-count').innerText  = shipped;
+    document.getElementById('delivered-count').innerText = delivered;
+    document.getElementById('pending-badge').innerText  =
+      pending > 0 ? ` ${pending} Pending Orders` : ' No Pending Orders';
+
+    renderOrders(filterByStatus(orders, activeFilter));
+  })
+  .catch((err) => {
+    console.error("Fetch or processing error:", err);
+    document.getElementById('orders-body').innerHTML =
+      '<tr><td colspan="7" style="text-align:center;color:#aaa;padding:30px;">System error loading data.</td></tr>';
+  });
+}
+
+function filterByStatus(orders, status){
+  if(status === 'all') return orders;
+  return orders.filter(o => o.status === status);
+}
+
+function filterOrders(status){
+  activeFilter = status;
+  document.querySelectorAll('[id^="tab-"]').forEach(b => {
+    b.className = 'btn btn-ghost';
+  });
+  document.getElementById('tab-' + status).className = 'btn btn-dark';
+  renderOrders(filterByStatus(allOrders, status));
+}
+
+function searchOrders(){
+  const q = document.getElementById('order-search').value.toLowerCase();
+  const filtered = filterByStatus(allOrders, activeFilter)
+    .filter(o => o.buyer_name.toLowerCase().includes(q) ||
+                 o.product_name.toLowerCase().includes(q));
+  renderOrders(filtered);
+}
+
+const statusClass = {
+  pending:'badge-pending', shipped:'badge-shipped',
+  delivered:'badge-delivered', cancelled:'badge-cancelled'
+};
+
+function renderOrders(orders){
+  const tbody = document.getElementById('orders-body');
+  if(!orders.length){
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#aaa;padding:30px;">No orders found.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = orders.map(o => {
+    const date    = new Date(o.created_at).toLocaleDateString('en-ZA');
+    const actions = o.status === 'pending'
+      ? `<button class="btn btn-dark" onclick="updateStatus(${o.id},'shipped')" style="font-size:12px;padding:6px 10px;">Mark Shipped</button>
+         <button class="btn btn-red"  onclick="updateStatus(${o.id},'cancelled')" style="font-size:12px;padding:6px 10px;margin-left:6px;">Cancel</button>`
+      : o.status === 'shipped'
+      ? `<button class="btn btn-green" onclick="updateStatus(${o.id},'delivered')" style="font-size:12px;padding:6px 10px;">Mark Delivered</button>`
+      : `<span style="color:#aaa;font-size:13px;">—</span>`;
+
+    return `
+      <tr>
+        <td><strong>#${o.id}</strong></td>
+        <td>${o.buyer_name}</td>
+        <td>${o.product_name}</td>
+        <td><strong>R${parseFloat(o.total).toFixed(2)}</strong></td>
+        <td style="color:#aaa;">${date}</td>
+        <td><span class="badge ${statusClass[o.status] || 'badge-pending'}">${o.status}</span></td>
+        <td>${actions}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function updateStatus(orderId, status){
+  fetch('updateOrderStatus.php', {
+    method: 'POST',
+    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+    body: `order_id=${orderId}&status=${status}`
+  })
+  .then(r => r.json())
+  .then(d => { if(d.status === 'success') loadOrders(); });
+}
+
+loadSidebarProfile();
+loadOrders();
+setInterval(loadOrders, 20000);
+</script>
+</body>
+</html>

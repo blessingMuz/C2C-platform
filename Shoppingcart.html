@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart | Ubuntu Market</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <nav class="navbar">
+    <div class="logo">Ubuntu Market</div>
+    <ul class="nav-links">
+      <li><a href="Homepage.html">Home</a></li>
+      <li><a href="productPage.html">Shop</a></li>
+      <li><a href="CheckOutPage.html">Checkout</a></li>
+      <li><a href="dashboard.php">Dashboard</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <div class="cart-container">
+    <h2>Your Shopping Cart</h2>
+
+    <table id="cart-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Image</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Total</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="cart-body">
+        <tr><td colspan="6">Loading cart...</td></tr>
+      </tbody>
+    </table>
+
+  
+    <div class="cart-summary" id="cart-summary" style="display:none;">
+      <h3>Grand Total: <span id="grand-total">R0</span></h3>
+      <a href="CheckOutPage.html">
+        <button class="checkout-btn">Proceed to Checkout</button>
+      </a>
+      <a href="productPage.html">
+        <button class="continue-btn">Continue Shopping</button>
+      </a>
+    </div>
+
+    <div id="empty-cart" style="display:none; text-align:center; padding:40px;">
+      <p>Your cart is empty.</p>
+      <a href="productPage.html">
+        <button class="continue-btn">Start Shopping</button>
+      </a>
+    </div>
+
+  </div>
+</main>
+
+
+
+<script>
+function loadCart(){
+  fetch('getCart.php')
+  .then(res => res.json())
+  .then(data => {
+    if(data.status == 'login'){
+      alert('Please login to view your cart!');
+      window.location.href = 'login.html';
+      return;
+    }
+
+    const body    = document.getElementById('cart-body');
+    const summary = document.getElementById('cart-summary');
+    const empty   = document.getElementById('empty-cart');
+
+    if(data.length == 0){
+      body.innerHTML = '';
+      empty.style.display   = 'block';
+      summary.style.display = 'none';
+      return;
+    }
+
+    let grandTotal = 0;
+
+    body.innerHTML = data.map(item => {
+      const total = item.price * item.quantity;
+      grandTotal += total;
+
+      return `
+        <tr id="row-${item.id}">
+          <td>${item.name}</td>
+          <td>
+            <img src="images/${item.image}" alt="${item.name}"
+                 onerror="this.src='images/placeholder.jpg'"
+                 style="width:60px; height:60px; object-fit:cover; border-radius:5px;">
+          </td>
+          <td>R${parseFloat(item.price).toFixed(2)}</td>
+          <td>
+            <input type="number" value="${item.quantity}" min="1"
+                   class="qty-input"
+                   onchange="updateQty(${item.id}, this.value)"
+                   style="width:60px; padding:5px; border-radius:5px; border:1px solid #ddd;">
+          </td>
+          <td id="total-${item.id}">R${total.toFixed(2)}</td>
+          <td>
+            <button class="remove-btn" onclick="removeItem(${item.id})">Remove</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    document.getElementById('grand-total').innerText = 'R' + grandTotal.toFixed(2);
+    summary.style.display = 'block';
+    empty.style.display   = 'none';
+  })
+  .catch(() => {
+    document.getElementById('cart-body').innerHTML = 
+      '<tr><td colspan="6">Error loading cart.</td></tr>';
+  });
+}
+
+function removeItem(cartId){
+  if(!confirm('Remove this item?')) return;
+
+  fetch('removeCart.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: 'cart_id=' + cartId
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.status == 'success') loadCart();
+  });
+}
+
+function updateQty(cartId, quantity){
+  if(quantity < 1) return;
+
+  fetch('updateCart.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: `cart_id=${cartId}&quantity=${quantity}`
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.status == 'success') loadCart();
+  });
+}
+
+loadCart();
+</script>
+<footer>
+  <p>&copy; 2026 Ubuntu Market</p>
+  <a href="about.html">About</a> |
+  <a href="contact.html">Contact</a>
+</footer>
+
+</body>
+</html>

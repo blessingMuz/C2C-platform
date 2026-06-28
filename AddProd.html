@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Product | Ubuntu Market</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <style>
+  
+textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+  background-color: #fff;
+}
+
+textarea:focus {
+  border-color: #000;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+}
+
+textarea::placeholder {
+  color: #aaa;
+}
+ 
+    .back-link-container {
+      margin-bottom: 16px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #000000;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .back-link:hover {
+      opacity: 0.7;
+      transform: translateX(-4px); 
+    }
+    .back-arrow-svg {
+      width: 16px;
+      height: 16px;
+      stroke-width: 2.5;
+    }
+  </style>
+
+<header>
+  <nav class="navbar">
+    <h1 class="logo">Ubuntu Market</h1>
+    <ul class="nav-links">
+      <li><a href="sellerDash.html">Dashboard</a></li>
+      <li><a href="Logout.php">Logout</a></li>
+      <li><a href="help.php">Help</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<div class="form-container">
+  <h2>Add New Product</h2>
+
+  <!-- Show success/error messages -->
+  <div id="msg"></div>
+
+  <form action="AddProd.php" method="POST" enctype="multipart/form-data">
+
+    <input type="text" name="name" placeholder="Product Name" required>
+
+    <input type="number" name="price" placeholder="Price (R)" step="0.01" required>
+
+    <textarea name="description" placeholder="Product Description" required></textarea>
+
+    <select name="category" required>
+      <option value="">Select Category</option>
+      <option value="clothing">Clothing</option>
+      <option value="electronics">Electronics</option>
+      <option value="shoes">Shoes</option>
+      <option value="furniture">Furniture</option>
+      <option value="other">Other</option>
+    </select>
+
+    <label>Product Image:</label>
+    <input type="file" name="image" accept="image/*" required>
+
+    <!-- Image preview -->
+    <img id="preview" src="#" alt="Preview" 
+         style="display:none; width:200px; margin:10px 0; border-radius:8px;">
+
+    <button type="submit">Add Product</button>
+     <!-- BACK BUTTON CONTAINER -->
+  <div class="back-link-container">
+    <a href="sellerDash.html" class="back-link">
+      <svg class="back-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+      </svg>
+      Back to Dashboard
+    </a>
+  </div>
+
+  </form>
+  
+</div>
+</main>
+
+<script>
+  // Show success/error from URL
+  const params = new URLSearchParams(window.location.search);
+  const msg = document.getElementById('msg');
+
+  if(params.get('success')){
+    msg.innerHTML = '<p style="color:green;">' + params.get('success') + '</p>';
+  }
+  if(params.get('error')){
+    msg.innerHTML = '<p style="color:red;">' + params.get('error') + '</p>';
+  }
+
+  // Image preview before upload
+  document.querySelector('input[name="image"]').addEventListener('change', function(){
+    const preview = document.getElementById('preview');
+    const file    = this.files[0];
+
+    if(file){
+      const reader  = new FileReader();
+      reader.onload = function(e){
+        preview.src           = e.target.result;
+        preview.style.display = 'block';
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+<footer class="seller-footer">
+  <p>&copy; 2026 Ubuntu Market &nbsp;|&nbsp;
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </p>
+</footer>
+
+</body>
+</html>

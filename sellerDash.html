@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Dashboard | Ubuntu Market</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="seller-shared.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-name">Ubuntu Market</div>
+    <div class="brand-sub">Seller Panel</div>
+  </div>
+  <div class="seller-avatar">
+    <div class="avatar-circle" id="sb-avatar">S</div>
+    <div class="avatar-info">
+      <div class="av-name" id="sb-name">Seller</div>
+      <div class="av-role">Seller</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <ul>
+      <li><a href="sellerDash.html" class="active"> Dashboard</a></li>
+      <li><a href="AddProd.html">Add Product</a></li>
+      <li><a href="ManageProd.php"> Manage Products</a></li>
+    </ul>
+    <div class="nav-section-label">Operations</div>
+    <ul>
+      <li><a href="inventory.html">Inventory</a></li>
+      <li><a href="sellerOrders.html">Orders</a></li>
+      <li><a href="sellerMess.php">Messages</a></li>
+    </ul>
+    <div class="nav-section-label">Account</div>
+    <ul>
+      <li><a href="Sellerprofile.html">Profile</a></li>
+      <li><a href="help.php">Help</a></li>
+    </ul>
+  </nav>
+  <div class="sidebar-bottom">
+    <a href="logout.php">Logout</a>
+  </div>
+</div>
+
+<div class="main-content">
+<div class="page-body">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Seller Dashboard</h1>
+      <p>Welcome back, <span id="seller-name">Loading...</span></p>
+    </div>
+    <div class="topbar-right">
+      <div class="badge-pill"><span id="avg-rating">—</span> / 5 Rating</div>
+      <div class="badge-pill" id="live-time">—</div>
+    </div>
+  </div>
+
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="stat-label">Total Products</div>
+      <div class="stat-value" id="stat-products">—</div>
+      <div class="stat-sub">Listed in store</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Orders</div>
+      <div class="stat-value green" id="stat-orders">—</div>
+      <div class="stat-sub">All time</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Revenue</div>
+      <div class="stat-value green" id="stat-revenue">—</div>
+      <div class="stat-sub">From completed orders</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Pending Orders</div>
+      <div class="stat-value orange" id="stat-pending">—</div>
+      <div class="stat-sub">Awaiting action</div>
+    </div>
+  </div>
+
+  <div class="quick-actions">
+    <a href="AddProd.html" class="qa-btn">Add Product</a>
+    <a href="ManageProd.php" class="qa-btn">Manage Products</a>
+    <a href="inventory.html" class="qa-btn">Inventory</a>
+    <a href="sellerOrders.html" class="qa-btn">View Orders</a>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h2>Recent Orders</h2>
+      <a href="sellerOrders.html" class="btn btn-ghost">View All →</a>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Buyer</th>
+            <th>Product</th>
+            <th>Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="recent-orders-body">
+          <tr><td colspan="5" style="text-align:center;color:#aaa;padding:30px;">Loading orders...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h2>Your Products</h2>
+      <a href="ManageProd.php" class="btn btn-ghost">Manage </a>
+    </div>
+    <div id="top-products" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;padding:20px;">
+      <p style="color:#aaa;grid-column:1/-1;text-align:center;">Loading products...</p>
+    </div>
+  </div>
+
+</div>
+
+<footer class="seller-footer">
+  <p>&copy; 2026 Ubuntu Market &nbsp;|&nbsp;
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </p>
+</footer>
+</div>
+
+<script>
+// Live clock
+function updateTime(){
+  const now = new Date();
+  document.getElementById('live-time').innerText =
+    now.toLocaleTimeString('en-ZA', {hour:'2-digit', minute:'2-digit'}) + ' · ' +
+    now.toLocaleDateString('en-ZA', {day:'numeric', month:'short'});
+}
+updateTime();
+setInterval(updateTime, 1000);
+
+// Load dynamic user profile details across sidebar and dashboard text links
+function loadSidebarProfile() {
+  fetch('getProfile.php')
+    .then(response => response.json())
+    .then(data => {
+      //  kicks to login page if user session is expired or missing
+      if (!data || data.status === 'login' || !data.name) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      // Update names safely from your database records
+      document.getElementById('seller-name').innerText = data.name;
+      document.getElementById('sb-name').innerText     = data.name;
+      
+      // Update avatar initials safely
+      const userInitial = data.name.charAt(0).toUpperCase();
+      document.getElementById('sb-avatar').innerText = userInitial;
+    })
+    .catch(err => {
+      console.log("Could not load dynamic sidebar credentials.");
+    });
+}
+
+// Load dashboard stats
+function loadDashboard(){
+  fetch('getSellerStats.php')
+  .then(r => r.json())
+  .then(d => {
+    document.getElementById('stat-products').innerText = d.products ?? 0;
+    document.getElementById('stat-orders').innerText   = d.orders   ?? 0;
+    document.getElementById('stat-revenue').innerText  = 'R' + (d.revenue ?? 0).toLocaleString();
+    document.getElementById('stat-pending').innerText  = d.pending  ?? 0;
+    document.getElementById('avg-rating').innerText    = d.rating   ?? '—';
+  })
+  .catch(() => {
+    ['stat-products','stat-orders','stat-revenue','stat-pending']
+      .forEach(id => document.getElementById(id).innerText = '—');
+  });
+}
+
+// Load recent orders
+function loadRecentOrders(){
+  fetch('getSellerOrders.php?limit=5')
+  .then(r => r.json())
+  .then(orders => {
+    const tbody = document.getElementById('recent-orders-body');
+    if(!orders.length){
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#aaa;padding:30px;">No orders yet</td></tr>';
+      return;
+    }
+    const statusClass = {pending:'badge-pending', shipped:'badge-shipped',
+                         delivered:'badge-delivered', cancelled:'badge-cancelled'};
+    tbody.innerHTML = orders.map(o => `
+      <tr>
+        <td><strong>#${o.id}</strong></td>
+        <td>${o.buyer_name}</td>
+        <td>${o.product_name}</td>
+        <td><strong>R${parseFloat(o.total).toFixed(2)}</strong></td>
+        <td><span class="badge ${statusClass[o.status] || 'badge-pending'}">${o.status}</span></td>
+      </tr>
+    `).join('');
+  });
+}
+
+// Load top products
+function loadTopProducts(){
+  fetch('getSellerProducts.php')
+  .then(r => r.json())
+  .then(products => {
+    const grid = document.getElementById('top-products');
+    if(!products.length){
+      grid.innerHTML = '<p style="color:#aaa;grid-column:1/-1;text-align:center;">No products yet</p>';
+      return;
+    }
+    grid.innerHTML = products.slice(0,6).map(p => `
+      <div style="background:#f9f9f9;border-radius:10px;overflow:hidden;border:1px solid #eee;">
+        <img src="images/${p.image}" onerror="this.src='images/placeholder.jpg'"
+             style="width:100%;height:100px;object-fit:cover;">
+        <div style="padding:10px;">
+          <div style="font-size:13px;font-weight:600;margin-bottom:4px;">${p.name}</div>
+          <div style="font-size:13px;color:#16a34a;font-weight:700;">R${parseFloat(p.price).toFixed(2)}</div>
+        </div>
+      </div>
+    `).join('');
+  });
+}
+
+// Run initial system setup
+loadSidebarProfile();
+loadDashboard();
+loadRecentOrders();
+loadTopProducts();
+
+// Dynamic polling script runs content cycles safely every 30 seconds
+setInterval(() => { 
+  loadDashboard(); 
+  loadRecentOrders(); 
+}, 30000);
+</script>
+</body>
+</html>

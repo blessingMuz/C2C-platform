@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile | Ubuntu Market</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="seller-shared.css">
+  <style>
+
+    .profile-messages-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 24px;
+      max-width: 1250px;
+      align-items: start;
+    }
+    .tab-header-menu {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #f0f0f0;
+      padding-bottom: 10px;
+    }
+
+    .tab-btn {
+      padding: 8px 16px;
+      border: none;
+      background: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: #888;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      background: #fafafa;
+      color: #000;
+    }
+
+    .tab-btn.active {
+      background: #000;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-name">Ubuntu Market</div>
+    <div class="brand-sub">Seller Panel</div>
+  </div>
+  <div class="seller-avatar">
+    <div class="avatar-circle" id="sb-avatar">S</div>
+    <div class="avatar-info">
+      <div class="av-name" id="sb-name">Seller</div>
+      <div class="av-role">Seller </div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <ul>
+      <li><a href="sellerDash.html" class="active"> Dashboard</a></li>
+      <li><a href="AddProd.html">Add Product</a></li>
+      <li><a href="ManageProd.php"> Manage Products</a></li>
+    </ul>
+    <div class="nav-section-label">Operations</div>
+    <ul>
+      <li><a href="inventory.html">Inventory</a></li>
+      <li><a href="sellerOrders.html">Orders</a></li>
+      <li><a href="sellerMess.php">Messages</a></li>
+    </ul>
+    <div class="nav-section-label">Account</div>
+    <ul>
+      <li><a href="sellerProfile.html">Profile</a></li>
+      <li><a href="help.php">Help</a></li>
+    </ul>
+  </nav>
+  <div class="sidebar-bottom">
+    <a href="Logout.php">Logout</a>
+  </div>
+</div>
+
+<div class="main-content">
+<div class="page-body">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>My Profile</h1>
+      <p>Manage account information and communications</p>
+    </div>
+  </div>
+
+  <div class="profile-messages-grid">
+
+    <div class="panel">
+      <div class="panel-header"><h2>Account Info</h2></div>
+      <div class="panel-body" style="text-align:center;">
+        <div style="width:80px; height:80px; background:linear-gradient(135deg,#000,#333);
+                    border-radius:50%; display:flex; align-items:center; justify-content:center;
+                    font-family:'Bebas Neue',sans-serif; font-size:36px; color:#fff;
+                    margin:0 auto 16px;" id="big-avatar">S</div>
+
+        <h3 id="profile-name" style="font-size:20px; font-weight:700; margin-bottom:4px;">Loading...</h3>
+        <div style="color:#ff6600; font-size:13px; font-weight:600; margin-bottom:20px;">Verified Merchant</div>
+
+        <div style="text-align:left; border-top:1px solid #f0f0f0; padding-top:16px;">
+          <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f9f9f9;">
+            <span style="font-size:13px; color:#888;">Email</span>
+            <span style="font-size:13px; font-weight:600;" id="profile-email">—</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f9f9f9;">
+            <span style="font-size:13px; color:#888;">Phone</span>
+            <span style="font-size:13px; font-weight:600;" id="profile-phone">—</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f9f9f9;">
+            <span style="font-size:13px; color:#888;">Role</span>
+            <span style="font-size:13px; font-weight:600;">Seller</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:10px 0;">
+            <span style="font-size:13px; color:#888;">Joined</span>
+            <span style="font-size:13px; font-weight:600;" id="profile-joined">—</span>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; display:flex; gap:10px;">
+          <button class="btn btn-ghost" onclick="showEditForm()" style="flex:1;">Edit</button>
+          <a href="logout.php" class="btn btn-red" style="flex:1; text-align:center; text-decoration:none;"> Logout</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="min-height: 560px;">
+      
+      <div class="panel-header">
+        <h2 id="right-panel-title">Business Activity</h2>
+      </div>
+
+      <div class="panel-body">
+        
+        <div id="section-performance">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:10px;">
+            <div style="background:#f9f9f9; border-radius:10px; padding:16px; text-align:center;">
+              <div style="font-family:'Bebas Neue',sans-serif; font-size:32px; color:#ff6600;" id="perf-sales">—</div>
+              <div style="font-size:12px; color:#aaa; text-transform:uppercase; letter-spacing:1px;">Total Sales</div>
+            </div>
+            <div style="background:#f9f9f9; border-radius:10px; padding:16px; text-align:center;">
+              <div style="font-family:'Bebas Neue',sans-serif; font-size:32px; color:#16a34a;" id="perf-revenue">—</div>
+              <div style="font-size:12px; color:#aaa; text-transform:uppercase; letter-spacing:1px;">Total Revenue</div>
+            </div>
+            <div style="background:#f9f9f9; border-radius:10px; padding:16px; text-align:center;">
+              <div style="font-family:'Bebas Neue',sans-serif; font-size:32px; color:#000;" id="perf-products">—</div>
+              <div style="font-size:12px; color:#aaa; text-transform:uppercase; letter-spacing:1px;">Active Products</div>
+            </div>
+            <div style="background:#f9f9f9; border-radius:10px; padding:16px; text-align:center;">
+              <div style="font-family:'Bebas Neue',sans-serif; font-size:32px; color:#dc2626;" id="perf-pending">—</div>
+              <div style="font-size:12px; color:#aaa; text-transform:uppercase; letter-spacing:1px;">Pending Orders</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="section-edit-profile" style="display:none; margin-top:10px;">
+          <div class="form-group">
+            <label>Full Name / Business Title</label>
+            <input type="text" id="edit-name">
+          </div>
+          <div class="form-group">
+            <label>Contact Phone Number</label>
+            <input type="text" id="edit-phone">
+          </div>
+          <div class="form-group">
+            <label>New Account Password <span style="color:#aaa; font-size:11px;">(leave blank to preserve current)</span></label>
+            <input type="password" id="edit-password" placeholder="••••••••">
+          </div>
+          <div style="display:flex; gap:10px; margin-top:12px;">
+            <button class="btn btn-dark" onclick="saveProfile()" style="flex:1;">Save Metrics</button>
+            <button class="btn btn-ghost" onclick="switchSubTab('performance')" style="flex:1;">Cancel</button>
+          </div>
+          <p id="edit-msg" style="margin-top:10px; font-size:13px; text-align:center;"></p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<script>
+function switchSubTab(targetSection) {
+  document.getElementById('section-performance').style.display = (targetSection === 'performance') ? 'block' : 'none';
+  document.getElementById('section-edit-profile').style.display = (targetSection === 'edit') ? 'block' : 'none';
+
+  const titleEl = document.getElementById('right-panel-title');
+  if (titleEl) {
+    titleEl.innerText = (targetSection === 'edit') ? 'Edit Profile Information' : 'Business Activity';
+  }
+}
+
+function showEditForm() {
+  switchSubTab('edit');
+}
+
+function loadProfile(){
+  fetch('getProfile.php')
+  .then(r => r.json())
+  .then(d => {
+    if(d.status==='login'){ window.location.href='login.html'; return; }
+    document.getElementById('profile-name').innerText  = d.name;
+    document.getElementById('profile-email').innerText = d.email;
+    document.getElementById('profile-phone').innerText = d.phone || 'Not set';
+    document.getElementById('sb-name').innerText       = d.name;
+    document.getElementById('sb-avatar').innerText     = d.name.charAt(0).toUpperCase();
+    document.getElementById('big-avatar').innerText    = d.name.charAt(0).toUpperCase();
+    
+    const joined = new Date(d.created_at);
+    document.getElementById('profile-joined').innerText =
+      joined.toLocaleDateString('en-ZA', {month:'long', year:'numeric'});
+      
+    document.getElementById('edit-name').value  = d.name;
+    document.getElementById('edit-phone').value = d.phone || '';
+  });
+}
+
+function loadStats(){
+  fetch('getSellerStats.php')
+  .then(r => r.json())
+  .then(d => {
+    document.getElementById('perf-sales').innerText    = d.sales    ?? '—';
+    document.getElementById('perf-revenue').innerText  = 'R' + (d.revenue ?? 0).toLocaleString();
+    document.getElementById('perf-products').innerText = d.products ?? '—';
+    document.getElementById('perf-pending').innerText  = d.pending  ?? '—';
+  });
+}
+
+function saveProfile(){
+  const name  = document.getElementById('edit-name').value;
+  const phone = document.getElementById('edit-phone').value;
+  const pass  = document.getElementById('edit-password').value;
+  const msg   = document.getElementById('edit-msg');
+
+  fetch('updateProfile.php', {
+    method:'POST',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:`name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&password=${encodeURIComponent(pass)}`
+  })
+  .then(r => r.json())
+  .then(d => {
+    if(d.status==='success'){
+      msg.style.color='green'; msg.innerText='Profile metrics updated!';
+      loadProfile(); 
+      setTimeout(() => { switchSubTab('performance'); msg.innerText=''; }, 1200);
+    } else {
+      msg.style.color='red'; msg.innerText='Error saving database record adjustments.';
+    }
+  });
+}
+
+
+loadProfile();
+loadStats();
+</script>
+
+<footer class="seller-footer">
+  <p>&copy; 2026 Ubuntu Market &nbsp;|&nbsp;
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </p>
+</footer>
+</body>
+</html>

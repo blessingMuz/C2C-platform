@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register | Ubuntu Market</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <nav class="navbar">
+    <h1 class="logo">Ubuntu Market</h1>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="productPage.html">Shop</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="help.php"></a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+
+<div class="form-container">
+
+  <h2>Create Your Account</h2>
+  <p>Join the marketplace and start buying or selling</p>
+    
+  <form action="register.php" method="POST" id="registerForm">
+
+    <input type="text" name="name" placeholder="Name" required>
+
+    <input type="email" name="email" placeholder="Email Address" required>
+
+    <input type="tel" name="phone" placeholder="Phone Number" required>
+
+    <input type="password" name="password" id="password" placeholder="Password" 
+           pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':&quot;\\|,.<>\/?~`]).{8,15}$"
+           title="Password must be 8 to 15 characters long and include at least 1 uppercase letter, 1 number, and 1 symbol." required>
+
+    <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required>
+
+    <label>Select Account Type:</label>
+    <select name="role" required>
+      <option value="">Choose...</option>
+      <option value="buyer">Buyer</option>
+      <option value="seller">Seller</option>
+    </select>
+
+    <div class="terms">
+      <input type="checkbox" required>
+      <label>I agree to the Terms & Conditions</label>
+    </div>
+
+    <button type="submit" name="register">Register</button>
+
+  </form>
+
+  <script>
+  // Handle password matching and strength validation on submission
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+  const password = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirm_password').value;
+  
+  //Length constraint check (8 to 15 characters)
+  if (password.length < 8 || password.length > 15) {
+    e.preventDefault();
+    alert("Password must be between 8 and 15 characters long.");
+    return;
+  }
+
+  // Number verification check (At least one digit)
+  const hasNumber = /[0-9]/.test(password);
+  if (!hasNumber) {
+    e.preventDefault();
+    alert("Password must contain at least one number (0-9).");
+    return;
+  }
+
+  // Symbol verification check (At least one special character)
+  const hasSymbol = /[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\\/]/.test(password);
+  if (!hasSymbol) {
+    e.preventDefault();
+    alert("Password must contain at least one special character/symbol (e.g., !, @, #, $, %).");
+    return;
+  }
+  
+  // Match check
+  if (password !== confirmPassword) {
+    e.preventDefault(); 
+    alert("Passwords do not match! Please check and try again.");
+    return;
+  }
+});
+  </script>
+
+  <p>Already have an account? 
+    <a href="login.html">Login here</a>
+  </p>
+
+</div>
+
+</main>
+<footer>
+  <p>&copy; 2026 Ubuntu Market</p>
+
+  <a href="about.html">About</a> |
+  <a href="contact.html">Contact</a>
+</footer>
+
+</body>
+</html>

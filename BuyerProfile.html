@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile | Ubuntu Market</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="buyer-shared.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-name">Ubuntu Market</div>
+    <div class="brand-sub">Buyer Panel</div>
+  </div>
+  <div class="buyer-avatar">
+    <div class="avatar-circle" id="sb-avatar">B</div>
+    <div class="avatar-info">
+      <div class="av-name" id="sb-name">Buyer</div>
+      <div class="av-role">Buyer</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <ul>
+      <li><a href="BuyerDash.php">Dashboard</a></li>
+      <li><a href="productPage.html"> Shop Products</a></li>
+      <li><a href="Shoppingcart.html">My Cart</a></li>
+    </ul>
+    <div class="nav-section-label">Account</div>
+    <ul>
+      <li><a href="buyerOrder.php">My Orders</a></li>
+      <li><a href="buyerMess.php">Messages</a></li>
+      <li><a href="BuyerProfile.html" class="active">Profile</a></li>
+      <li><a href="help.php">Help</a></li>
+    </ul>
+  </nav>
+  <div class="sidebar-bottom">
+    <a href="logout.php"> Logout</a>
+  </div>
+</div>
+
+<div class="main-content">
+<div class="page-body">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>My Profile</h1>
+      <p>Manage your account details</p>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1.5fr;gap:24px;max-width:900px;">
+
+  
+    <div class="panel" style="height:fit-content;">
+      <div class="panel-header"><h2>Account Info</h2></div>
+      <div class="panel-body" style="text-align:center;">
+        <div style="width:80px;height:80px;background:linear-gradient(135deg,#1d4ed8,#3b82f6);
+                    border-radius:50%;display:flex;align-items:center;justify-content:center;
+                    font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;
+                    margin:0 auto 16px;" id="big-avatar">B</div>
+
+        <h3 id="profile-name" style="font-size:20px;font-weight:700;margin-bottom:4px;">Loading...</h3>
+        <div style="color:#3b82f6;font-size:13px;font-weight:600;margin-bottom:20px;">Buyer Account</div>
+
+        <div style="text-align:left;border-top:1px solid #f0f0f0;padding-top:16px;">
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f9f9f9;">
+            <span style="font-size:13px;color:#888;">Email</span>
+            <span style="font-size:13px;font-weight:600;" id="profile-email">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f9f9f9;">
+            <span style="font-size:13px;color:#888;">Phone</span>
+            <span style="font-size:13px;font-weight:600;" id="profile-phone">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f9f9f9;">
+            <span style="font-size:13px;color:#888;">Role</span>
+            <span style="font-size:13px;font-weight:600;">Buyer</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;">
+            <span style="font-size:13px;color:#888;">Joined</span>
+            <span style="font-size:13px;font-weight:600;" id="profile-joined">—</span>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;display:flex;gap:10px;">
+          <button class="btn btn-ghost" onclick="showEdit()" style="flex:1;"> Edit</button>
+          <a href="logout.php" class="btn btn-red" style="flex:1;text-align:center;text-decoration:none;">Logout</a>
+        </div>
+      </div>
+    </div>
+
+  
+    <div>
+      
+      <div class="panel" id="edit-section" style="display:none;margin-bottom:24px;">
+        <div class="panel-header"><h2>Edit Profile</h2></div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="edit-name" placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text" id="edit-phone" placeholder="e.g. 071 234 5678">
+          </div>
+          <div class="form-group">
+            <label>New Password <span style="color:#aaa;font-size:12px;">(leave blank to keep current)</span></label>
+            <input type="password" id="edit-password" placeholder="New password">
+          </div>
+          <div style="display:flex;gap:10px;margin-top:4px;">
+            <button class="btn btn-dark" onclick="saveProfile()" style="flex:1;">Save Changes</button>
+            <button class="btn btn-ghost" onclick="hideEdit()" style="flex:1;">Cancel</button>
+          </div>
+          <p id="edit-msg" style="margin-top:10px;font-size:13px;text-align:center;"></p>
+        </div>
+      </div>
+
+      
+      <div class="panel">
+        <div class="panel-header"><h2>Shopping Activity</h2></div>
+        <div class="panel-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div style="background:#f9f9f9;border-radius:10px;padding:16px;text-align:center;">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:#1d4ed8;" id="perf-orders">—</div>
+              <div style="font-size:12px;color:#aaa;text-transform:uppercase;letter-spacing:1px;">Total Orders</div>
+            </div>
+            <div style="background:#f9f9f9;border-radius:10px;padding:16px;text-align:center;">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:#16a34a;" id="perf-spent">—</div>
+              <div style="font-size:12px;color:#aaa;text-transform:uppercase;letter-spacing:1px;">Total Spent</div>
+            </div>
+            <div style="background:#f9f9f9;border-radius:10px;padding:16px;text-align:center;">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:#ff6600;" id="perf-cart">—</div>
+              <div style="font-size:12px;color:#aaa;text-transform:uppercase;letter-spacing:1px;">Cart Items</div>
+            </div>
+            <div style="background:#f9f9f9;border-radius:10px;padding:16px;text-align:center;">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:#dc2626;" id="perf-pending">—</div>
+              <div style="font-size:12px;color:#aaa;text-transform:uppercase;letter-spacing:1px;">Pending</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="buyer-footer">
+  <p>&copy; 2026 Ubuntu Market &nbsp;|&nbsp;
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </p>
+</footer>
+</div>
+
+<script>
+function loadProfile(){
+  fetch('getProfile.php')
+  .then(r => r.json())
+  .then(d => {
+    if(d.status==='login'){ window.location.href='login.html'; return; }
+    document.getElementById('profile-name').innerText  = d.name;
+    document.getElementById('profile-email').innerText = d.email;
+    document.getElementById('profile-phone').innerText = d.phone||'Not set';
+    document.getElementById('sb-name').innerText       = d.name;
+    document.getElementById('sb-avatar').innerText     = d.name.charAt(0).toUpperCase();
+    document.getElementById('big-avatar').innerText    = d.name.charAt(0).toUpperCase();
+    const joined = new Date(d.created_at);
+    document.getElementById('profile-joined').innerText =
+      joined.toLocaleDateString('en-ZA',{month:'long',year:'numeric'});
+    document.getElementById('edit-name').value  = d.name;
+    document.getElementById('edit-phone').value = d.phone||'';
+  });
+}
+
+function loadStats(){
+  fetch('getBuyerStats.php')
+  .then(r => r.json())
+  .then(d => {
+    document.getElementById('perf-orders').innerText  = d.orders  ?? '—';
+    document.getElementById('perf-spent').innerText   = 'R'+(d.spent??0).toLocaleString();
+    document.getElementById('perf-cart').innerText    = d.cart    ?? '—';
+    document.getElementById('perf-pending').innerText = d.pending ?? '—';
+  });
+}
+
+function showEdit(){ document.getElementById('edit-section').style.display='block'; }
+function hideEdit(){ document.getElementById('edit-section').style.display='none'; }
+
+function saveProfile(){
+  const name  = document.getElementById('edit-name').value;
+  const phone = document.getElementById('edit-phone').value;
+  const pass  = document.getElementById('edit-password').value;
+  const msg   = document.getElementById('edit-msg');
+
+  fetch('updateProfile.php',{
+    method:'POST',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:`name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&password=${encodeURIComponent(pass)}`
+  })
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.status==='success'){
+      msg.style.color='green'; msg.innerText='Profile updated!';
+      loadProfile(); setTimeout(hideEdit,1200);
+    } else {
+      msg.style.color='red'; msg.innerText='Error updating.';
+    }
+  });
+}
+
+loadProfile();
+loadStats();
+</script>
+</body>
+</html>

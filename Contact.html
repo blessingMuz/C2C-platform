@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | Ubuntu Market</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;900&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet"/>
+  
+  <style>
+    
+    :root {
+      --main-bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-muted: #666666;
+      --accent-color: #000000;
+      --accent-hover: #333333;
+      --accent-red: #dc2626;
+      --border-subtle: rgba(0, 0, 0, 0.08);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Barlow', 'Segoe UI', Arial, sans-serif;
+      background-color: var(--main-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #000000;
+      color: #ffffff;
+      padding: 18px 40px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 26px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 24px;
+      padding: 0;
+      margin: 0;
+    }
+
+    .nav-links a {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: opacity 0.2s;
+    }
+
+    .nav-links a:hover {
+      opacity: 0.7;
+    }
+
+    
+    .page-hero {
+      text-align: center;
+      padding: 60px 20px 40px 20px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .page-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 42px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0 0 8px 0;
+    }
+
+    .page-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    
+    .content-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+
+    .grid-two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .grid-two-col {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+
+  
+    .info-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .info-card h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      background-color: var(--main-bg);
+      font-family: inherit;
+      font-size: 14px;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--accent-color);
+      color: #ffffff;
+      border: none;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-submit:hover {
+      background: var(--accent-hover);
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      margin-top: 60px;
+      border-top: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    footer a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  
+  <header>
+    <nav class="navbar">
+      <h1 class="logo">Ubuntu Market</h1>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="productPage.html">Shop</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  
+  <section class="page-hero">
+    <h2 class="page-title">Contact Support</h2>
+    <p class="page-subtitle">Have a question regarding an escrow hold, a recent checkout order, or user verification? Let us know.</p>
+  </section>
+
+  <main class="content-container">
+    <div class="grid-two-col">
+      
+      <div class="info-card">
+        <h2>Send a Message</h2>
+        <form action="submitTicket.php" method="POST">
+          <div class="form-group">
+            <label for="contact-name">Full Name</label>
+            <input type="text" id="contact-name" name="name" class="form-control" placeholder="Your name" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="contact-email">Email Address</label>
+            <input type="email" id="contact-email" name="email" class="form-control" placeholder="yourname@domain.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="contact-subject">Inquiry Subject</label>
+            <input type="text" id="contact-subject" name="subject" class="form-control" placeholder="What can we help you with?" required>
+          </div>
+
+          <div class="form-group">
+            <label for="contact-message">Detailed Explanation</label>
+            <textarea id="contact-message" name="message" class="form-control" placeholder="Please clarify your request clearly..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit">Submit Ticket</button>
+        </form>
+      </div>
+
+    
+      <div class="info-card">
+        <h2>Direct Support Matrix</h2>
+        <p>If your question involves a direct order conflict, try messaging your buyer or seller directly inside the messages channel before opening a public arbitration ticket.</p>
+        
+        <hr style="border:0; border-top:1px solid var(--border-subtle); margin:24px 0;">
+        
+        <h3 style="font-size:14px; text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">General Inquiries</h3>
+        <p style="color: var(--text-muted); margin-top:0; font-size:15px;">info@ubuntu.market</p>
+
+        <h3 style="font-size:14px; text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px; margin-top:20px;">Escrow & Fraud Disputes</h3>
+        <p style="color: var(--accent-red); margin-top:0; font-size:15px; font-weight:600;">disputes@ubuntu.market</p>
+        
+        <h3 style="font-size:14px; text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px; margin-top:20px;">Support Hours</h3>
+        <p style="color: var(--text-muted); margin-top:0; font-size:15px;">Monday – Friday: 08:00 to 17:00 (SAST)</p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Ubuntu Market &nbsp;|&nbsp; <a href="about.html">Learn more about our platform</a></p>
+  </footer>
+
+</body>
+</html>

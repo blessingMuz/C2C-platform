@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us | Ubuntu Market</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;900&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet"/>
+  
+  <style>
+
+    :root { --main-bg: #f8f9fa;--card-bg: #ffffff;--text-primary: #1a1a1a;--text-muted: #666666;--accent-color: #000000;--accent-hover: #333333;--border-subtle: rgba(0, 0, 0, 0.08);}
+    body { margin: 0;padding: 0;font-family: 'Barlow', 'Segoe UI', Arial, sans-serif;background-color: var(--main-bg);color: var(--text-primary);line-height: 1.6;}
+   .navbar { display: flex;justify-content: space-between;align-items: center;background: #000000;color: #ffffff;padding: 18px 40px;box-shadow: 0 2px 10px rgba(0,0,0,0.05);}
+   .logo { font-family: 'Barlow Condensed', sans-serif;font-size: 26px;font-weight: 900;text-transform: uppercase;letter-spacing: 0.5px;margin: 0;}
+   .nav-links { display: flex;list-style: none;gap: 24px;padding: 0; margin: 0; }
+   .nav-links a {color: #ffffff;text-decoration: none;font-weight: 600;font-size: 14px;text-transform: uppercase;letter-spacing: 0.5px;transition: opacity 0.2s;}
+   .nav-links a:hover {opacity: 0.7;}
+    .page-hero {text-align: center;padding: 60px 20px 40px 20px;background: #ffffff;border-bottom: 1px solid var(--border-subtle);}
+    .page-title { font-family: 'Barlow Condensed', sans-serif;font-size: 42px;font-weight: 900;text-transform: uppercase;letter-spacing: 0.5px; margin: 0 0 8px 0;}
+    .page-subtitle {font-size: 16px;color: var(--text-muted);max-width: 600px; margin: 0 auto;}
+   .content-container {max-width: 1100px;margin: 40px auto;padding: 0 20px;box-sizing: border-box;}
+   .grid-two-col {display: grid;grid-template-columns: 1fr 1fr;gap: 40px; align-items: start;}
+   @media (max-width: 768px) {
+      .grid-two-col { grid-template-columns: 1fr;gap: 32px;}
+    }
+    .info-card {background: var(--card-bg);border-radius: 16px;padding: 40px;box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);border: 1px solid var(--border-subtle);}
+   .info-card h2 {font-family: 'Barlow Condensed', sans-serif;font-size: 24px;font-weight: 900;text-transform: uppercase;margin-top: 0;margin-bottom: 16px;}
+    footer {text-align: center;padding: 40px 20px;margin-top: 60px;border-top: 1px solid var(--border-subtle);color: var(--text-muted); font-size: 13px;}
+    footer a {color: var(--text-primary);text-decoration: none;font-weight: 600;}
+  </style>
+</head>
+<body>
+
+  
+  <header>
+    <nav class="navbar">
+      <h1 class="logo">Ubuntu Market</h1>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="productPage.html">Shop</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+
+  <section class="page-hero">
+    <h2 class="page-title">Our Story</h2>
+    <p class="page-subtitle">Building an authentic, transparent, and connected peer-to-peer marketplace trading community.</p>
+  </section>
+
+  
+  <main class="content-container">
+    <div class="grid-two-col">
+      
+      <div class="info-card">
+        <h2>The Ubuntu Philosophy</h2>
+        <p>Ubuntu Market is built on the fundamental principle of "I am because we are." We believe that commerce should be human-centric, reliable, and deeply community-driven. Our ecosystem safely bridges the gap between modern independent sellers and proactive buyers looking for high-quality items.</p>
+        <p>By bypassing traditional retail friction, we empower single entrepreneurs, local creators, and regular buyers to conduct secure trade using standardized holding criteria.</p>
+      </div>
+
+      <div class="info-card">
+        <h2>Why Choose Our Marketplace?</h2>
+        <p>We work tirelessly behind the scenes to optimize safety, verification speed, and platform integrity across all buyer-to-seller operations.</p>
+        <ul style="padding-left: 20px; margin: 0; color: var(--text-muted);">
+          <li style="margin-bottom: 10px;"><strong style="color:var(--text-primary)">Vetted Seller Verification:</strong> Transparent community accountability tracking.</li>
+          <li style="margin-bottom: 10px;"><strong style="color:var(--text-primary)">Protected Escrow Holds:</strong> Secure trade flows that protect your capital until items arrive safely.</li>
+          <li style="margin-bottom: 10px;"><strong style="color:var(--text-primary)">Dedicated Support:</strong> Fast administrative dispute loops handled right when you need them.</li>
+        </ul>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Ubuntu Market &nbsp;|&nbsp; <a href="contact.html">Need Help? Contact Support</a></p>
+  </footer>
+
+</body>
+</html>

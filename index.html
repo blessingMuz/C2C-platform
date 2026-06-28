@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ubuntu Market | Buy & Sell Across Mzansi</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', Arial, sans-serif;
+      background: #f5f5f5;
+      overflow-x: hidden;
+    }
+
+    
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #000;
+      padding: 0 40px;
+      height: 65px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+    }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      color: #fff;
+      letter-spacing: 2px;
+      white-space: nowrap;
+    }
+
+    .search-wrapper {
+      flex: 1;
+      max-width: 420px;
+      margin: 0 30px;
+      position: relative;
+    }
+
+    .search-wrapper input {
+      width: 100%;
+      padding: 10px 20px 10px 44px;
+      border-radius: 25px;
+      border: none;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    .search-wrapper input::placeholder { color: #888; }
+
+    .search-wrapper input:focus {
+      background: #222;
+      box-shadow: 0 0 0 2px #ff6600;
+    }
+
+    .search-wrapper .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+      font-size: 16px;
+      pointer-events: none;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: #ccc;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: #fff;
+      background: #1a1a1a;
+    }
+
+    .nav-links .cart-link {
+      background: #ff6600;
+      color: #fff;
+      border-radius: 20px;
+      padding: 6px 16px;
+    }
+
+    .nav-links .cart-link:hover { background: #e55a00; }
+
+    .hero {
+      min-height: 88vh;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,102,0,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,102,0,0.07) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridMove 20s linear infinite;
+    }
+
+    @keyframes gridMove {
+      0% { background-position: 0 0; }
+      100% { background-position: 50px 50px; }
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255,102,0,0.15) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+      50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,102,0,0.15);
+      border: 1px solid rgba(255,102,0,0.4);
+      color: #ff6600;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(52px, 9vw, 110px);
+      color: #fff;
+      line-height: 0.95;
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+      animation: fadeUp 0.8s ease 0.1s both;
+    }
+
+    .hero h2 span { color: #ff6600; }
+
+    .hero p {
+      color: #aaa;
+      font-size: 18px;
+      max-width: 520px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s ease 0.3s both;
+    }
+
+    .btn-primary {
+      background: #ff6600;
+      color: #fff;
+      padding: 14px 36px;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+      box-shadow: 0 4px 20px rgba(255,102,0,0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(255,102,0,0.5);
+      background: #ff7722;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #fff;
+      padding: 14px 36px;
+      border: 2px solid #444;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.2s, border-color 0.2s, background 0.2s;
+    }
+
+    .btn-outline:hover {
+      transform: translateY(-2px);
+      border-color: #fff;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      animation: bounce 2s ease-in-out infinite;
+      color: #555;
+      font-size: 22px;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    .stats-bar {
+      background: #fff;
+      padding: 28px 40px;
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      border-bottom: 1px solid #eee;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .stat-item:nth-child(1) { animation-delay: 0.1s; }
+    .stat-item:nth-child(2) { animation-delay: 0.2s; }
+    .stat-item:nth-child(3) { animation-delay: 0.3s; }
+    .stat-item:nth-child(4) { animation-delay: 0.4s; }
+
+    .stat-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      color: #000;
+      letter-spacing: 1px;
+    }
+
+    .stat-number span { color: #ff6600; }
+
+    .stat-label {
+      font-size: 13px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .section-header {
+      text-align: center;
+      padding: 60px 20px 30px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    .section-header.visible { opacity: 1; }
+
+    .section-tag {
+      display: inline-block;
+      background: #fff3ec;
+      color: #ff6600;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .section-header h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(32px, 5vw, 52px);
+      letter-spacing: 1px;
+      color: #000;
+    }
+
+    .section-header p {
+      color: #888;
+      font-size: 16px;
+      margin-top: 8px;
+    }
+
+    .featured-section {
+      padding: 0 20px 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+      padding: 32px 24px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+    }
+
+    .product-card {
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      transition: transform 0.3s, box-shadow 0.3s;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+    }
+
+    .product-card:nth-child(1) { animation-delay: 0.1s; }
+    .product-card:nth-child(2) { animation-delay: 0.2s; }
+    .product-card:nth-child(3) { animation-delay: 0.3s; }
+    .product-card:nth-child(4) { animation-delay: 0.4s; }
+
+    .product-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s;
+    }
+
+    .product-card:hover img { transform: scale(1.04); }
+
+    .product-card-body {
+      padding: 16px;
+    }
+
+    .product-card-body h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      text-transform: capitalize;
+    }
+
+    .product-card-body .seller {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 10px;
+    }
+
+    .product-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .product-price {
+      font-size: 18px;
+      font-weight: 700;
+      color: #000;
+    }
+
+    .card-btn {
+      background: #000;
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .card-btn:hover {
+      background: #ff6600;
+      transform: scale(1.05);
+    }
+
+    .view-all-wrap {
+      text-align: center;
+      margin-top: 36px;
+    }
+
+    .view-all-btn {
+      display: inline-block;
+      background: #000;
+      color: #fff;
+      padding: 14px 40px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .view-all-btn:hover {
+      background: #ff6600;
+      transform: translateY(-2px);
+    }
+
+    .categories-section {
+      background: #000;
+      padding: 60px 40px;
+    }
+
+    .categories-section .section-header h2 { color: #fff; }
+    .categories-section .section-header p { color: #666; }
+    .categories-section .section-tag {
+      background: rgba(255,102,0,0.15);
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 16px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .category-pill {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 20px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.3s, background 0.3s, transform 0.3s;
+      text-decoration: none;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .category-pill:nth-child(1) { animation-delay: 0.05s; }
+    .category-pill:nth-child(2) { animation-delay: 0.10s; }
+    .category-pill:nth-child(3) { animation-delay: 0.15s; }
+    .category-pill:nth-child(4) { animation-delay: 0.20s; }
+    .category-pill:nth-child(5) { animation-delay: 0.25s; }
+    .category-pill:nth-child(6) { animation-delay: 0.30s; }
+
+    .category-pill:hover {
+      border-color: #ff6600;
+      background: #1a0a00;
+      transform: translateY(-4px);
+    }
+
+    .category-icon { font-size: 28px; margin-bottom: 8px; }
+
+    .category-name {
+      font-size: 13px;
+      color: #aaa;
+      font-weight: 500;
+    }
+
+    .how-section {
+      padding: 80px 40px;
+      background: #fff;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .step-card {
+      text-align: center;
+      padding: 30px 20px;
+      border-radius: 14px;
+      background: #f9f9f9;
+      transition: transform 0.3s, box-shadow 0.3s;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .step-card:nth-child(1) { animation-delay: 0.1s; }
+    .step-card:nth-child(2) { animation-delay: 0.2s; }
+    .step-card:nth-child(3) { animation-delay: 0.3s; }
+    .step-card:nth-child(4) { animation-delay: 0.4s; }
+
+    .step-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    .step-number {
+      width: 48px;
+      height: 48px;
+      background: #000;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      margin: 0 auto 16px;
+    }
+
+    .step-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .step-card p {
+      font-size: 14px;
+      color: #888;
+      line-height: 1.5;
+    }
+
+    .cta-section {
+      background: #ff6600;
+      padding: 80px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,0,0,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.08) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .cta-content { position: relative; z-index: 1; }
+
+    .cta-section h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(36px, 6vw, 72px);
+      color: #fff;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+    }
+
+    .cta-section p {
+      color: rgba(255,255,255,0.85);
+      font-size: 18px;
+      margin-bottom: 36px;
+    }
+
+    .cta-section .btn-white {
+      background: #fff;
+      color: #ff6600;
+      padding: 16px 44px;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    .cta-section .btn-white:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+
+    footer {
+      background: #000;
+      color: #666;
+      text-align: center;
+      padding: 30px;
+      font-size: 14px;
+    }
+
+    footer a {
+      color: #888;
+      text-decoration: none;
+      margin: 0 8px;
+      transition: color 0.2s;
+    }
+
+    footer a:hover { color: #ff6600; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <nav class="navbar">
+    <div class="logo">Ubuntu Market</div>
+
+    <div class="search-wrapper">
+      
+      <input type="text" id="heroSearch" placeholder="Search products, sellers..."
+             onkeyup="handleSearch(event)">
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="productPage.html">Shop</a></li>
+      <li><a href="help.php">Help</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="register.html">Register</a></li>
+      <li><a href="Shoppingcart.html" class="cart-link">Cart</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🇿🇦 South Africa's People Marketplace</div>
+    <h2>Buy & Sell<br><span>Across Mzansi</span></h2>
+    <p>A people-first marketplace built on trust, connection, and shared growth — where every transaction strengthens the community.</p>
+    <div class="hero-buttons">
+      <a href="productPage.html" class="btn-primary">Start Shopping</a>
+      <a href="register.html" class="btn-outline">Start Selling</a>
+    </div>
+  </div>
+  <div class="scroll-indicator">↓</div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-number" id="stat-products">0<span>+</span></div>
+    <div class="stat-label">Products Listed</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number" id="stat-sellers">0<span>+</span></div>
+    <div class="stat-label">Active Sellers</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number" id="stat-buyers">0<span>+</span></div>
+    <div class="stat-label">Happy Buyers</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">9<span> Provinces</span></div>
+    <div class="stat-label">Nationwide</div>
+  </div>
+</div>
+
+<div class="section-header">
+  <div class="section-tag"> Handpicked</div>
+  <h2>Featured Products</h2>
+  <p>Fresh listings from sellers across South Africa</p>
+</div>
+
+<section class="featured-section">
+  <div class="products-grid" id="featured-products">
+    
+    <div class="product-card">
+      <div class="skeleton" style="height:220px;"></div>
+      <div class="product-card-body">
+        <div class="skeleton" style="height:16px; width:60%; margin-bottom:8px;"></div>
+        <div class="skeleton" style="height:12px; width:40%;"></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="skeleton" style="height:220px;"></div>
+      <div class="product-card-body">
+        <div class="skeleton" style="height:16px; width:60%; margin-bottom:8px;"></div>
+        <div class="skeleton" style="height:12px; width:40%;"></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="skeleton" style="height:220px;"></div>
+      <div class="product-card-body">
+        <div class="skeleton" style="height:16px; width:60%; margin-bottom:8px;"></div>
+        <div class="skeleton" style="height:12px; width:40%;"></div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="skeleton" style="height:220px;"></div>
+      <div class="product-card-body">
+        <div class="skeleton" style="height:16px; width:60%; margin-bottom:8px;"></div>
+        <div class="skeleton" style="height:12px; width:40%;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="view-all-wrap">
+    <a href="productPage.html" class="view-all-btn">View All Products →</a>
+  </div>
+</section>
+
+
+<section class="categories-section">
+  <div class="section-header">
+    <div class="section-tag">Browse by Category</div>
+    <h2>Shop by Category</h2>
+    <p style="color:#666;">Find exactly what you're looking for</p>
+  </div>
+  <div class="categories-grid">
+    <a href="productPage.html?category=clothing" class="category-pill">
+
+      <div class="category-name">Clothing</div>
+    </a>
+    <a href="productPage.html?category=electronics" class="category-pill">
+      
+      <div class="category-name">Electronics</div>
+    </a>
+    <a href="productPage.html?category=shoes" class="category-pill">
+      
+      <div class="category-name">Shoes</div>
+    </a>
+    <a href="productPage.html?category=furniture" class="category-pill">
+      
+      <div class="category-name">Furniture</div>
+    </a>
+    <a href="productPage.html?category=food" class="category-pill">
+      
+      <div class="category-name">Food</div>
+    </a>
+    <a href="productPage.html?category=other" class="category-pill">
+      
+      <div class="category-name">Other</div>
+    </a>
+  </div>
+</section>
+
+<section class="how-section">
+  <div class="section-header">
+    <div class="section-tag">Simple & Fast</div>
+    <h2>How It Works</h2>
+    <p>Get started in minutes</p>
+  </div>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-number">1</div>
+      <h3>Create Account</h3>
+      <p>Sign up as a buyer or seller in under 2 minutes</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">2</div>
+      <h3>Browse or List</h3>
+      <p>Shop thousands of products or list your own items</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">3</div>
+      <h3>Connect</h3>
+      <p>Message sellers directly and negotiate deals</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">4</div>
+      <h3>Trade Safely</h3>
+      <p>Complete your transaction with confidence</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-content">
+    <h2>Start Selling Today</h2>
+    <p>Turn your products into profit — join thousands of sellers across Mzansi</p>
+    <a href="register.html" class="btn-white">Create Free Account</a>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 Ubuntu Market &nbsp;|&nbsp;
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </p>
+</footer>
+
+<script>
+//  Load featured products from database 
+function loadFeaturedProducts(){
+  fetch('getProd.php?search=&category=')
+  .then(res => res.json())
+  .then(products => {
+    const grid = document.getElementById('featured-products');
+
+    if(!products || products.length === 0){
+      grid.innerHTML = '<p style="text-align:center; color:#999; grid-column:1/-1; padding:40px;">No products yet — check back soon!</p>';
+      return;
+    }
+
+    // Show max 8 featured
+    const featured = products.slice(0, 8);
+
+    grid.innerHTML = featured.map((p, i) => `
+      <div class="product-card" style="animation-delay:${i * 0.08}s">
+        <img src="images/${p.image}" alt="${p.name}"
+             onerror="this.src='images/placeholder.jpg'">
+        <div class="product-card-body">
+          <h3>${p.name}</h3>
+          <div class="seller">by ${p.seller_name}</div>
+        </div>
+        <div class="product-card-footer">
+          <span class="product-price">R${parseFloat(p.price).toFixed(2)}</span>
+          <button class="card-btn"
+            onclick="window.location.href='productDetail.html?id=${p.id}'">
+            View
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    // Animate stats based on real data
+    animateCount('stat-products', products.length);
+  })
+  .catch(() => {
+    document.getElementById('featured-products').innerHTML =
+      '<p style="text-align:center;color:#999;grid-column:1/-1;padding:40px;">Unable to load products.</p>';
+  });
+}
+
+function animateCount(id, target){
+  const el    = document.getElementById(id);
+  const suffix = el.innerHTML.includes('+') ? '<span>+</span>' : '';
+  let count   = 0;
+  const step  = Math.ceil(target / 40);
+  const timer = setInterval(() => {
+    count += step;
+    if(count >= target){
+      count = target;
+      clearInterval(timer);
+    }
+    el.innerHTML = count + suffix;
+  }, 40);
+}
+
+// Count sellers and buyers from users
+function loadStats(){
+  fetch('getStats.php')
+  .then(res => res.json())
+  .then(data => {
+    if(data.sellers) animateCount('stat-sellers', data.sellers);
+    if(data.buyers)  animateCount('stat-buyers',  data.buyers);
+  })
+  .catch(() => {
+    animateCount('stat-sellers', 12);
+    animateCount('stat-buyers',  38);
+  });
+}
+
+// Search redirect 
+function handleSearch(e){
+  if(e.key === 'Enter'){
+    const q = document.getElementById('heroSearch').value.trim();
+    if(q) window.location.href = 'productPage.html?search=' + encodeURIComponent(q);
+  }
+}
+loadFeaturedProducts();
+loadStats();
+</script>
+
+</body>
+</html>

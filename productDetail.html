@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details | Ubuntu Market</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .stars { color: gold; font-size: 20px; cursor: pointer; }
+    .star { font-size: 24px; cursor: pointer; color: #ccc; }
+    .star.selected, .star:hover { color: gold; }
+    .review-card {
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-left: 4px solid #000;
+    }
+    .review-form {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .review-form textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      margin: 10px 0;
+      min-height: 80px;
+      font-family: inherit;
+    }
+    .review-form button {
+      background: #000;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #review-msg { margin: 10px 0; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<header>
+  <nav class="navbar">
+    <div class="logo">Ubuntu Market</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="productPage.html">Shop</a></li>
+      <li><a href="Shoppingcart.html">Cart</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <div class="product-container">
+
+    <div class="product-image">
+      <img id="product-img" src="images/placeholder.jpg" alt="Product"
+           style="width:100%; border-radius:10px; max-height:400px; object-fit:cover;">
+    </div>
+
+  
+    <div class="product-details">
+      <h1 id="product-name">Loading...</h1>
+      <div class="price" id="product-price"></div>
+      <div id="product-category" style="color:#666; margin:5px 0;"></div>
+      <div class="description" id="product-desc" style="margin:15px 0;"></div>
+
+      <div class="seller-info">
+        <h3>Seller Information</h3>
+        <p><strong>Seller:</strong> <span id="seller-name"></span></p>
+      </div>
+
+      
+      <div class="quantity" style="margin:15px 0;">
+        <label>Quantity:</label>
+        <input type="number" id="qty" value="1" min="1"
+               style="width:70px; padding:8px; border-radius:5px; border:1px solid #ddd;">
+      </div>
+
+      
+      <div class="buttons">
+        <button class="cart-btn" onclick="addToCart()">Add to Cart</button>
+        <a href="CheckOutPage.html">
+          <button class="btn" onclick="buyNow(event)">Buy Now</button>
+        </a>
+        <button class="message-btn" onclick="messageSeller()">Message Seller</button>
+      </div>
+
+    </div>
+  </div>
+
+  
+  <section class="reviews" style="max-width:800px; margin:40px auto; padding:0 20px;">
+    <h2>Customer Reviews</h2>
+
+    <div class="review-form">
+      <h3>Write a Review</h3>
+      <div id="star-rating">
+        <span class="star" onclick="setRating(1)">★</span>
+        <span class="star" onclick="setRating(2)">★</span>
+        <span class="star" onclick="setRating(3)">★</span>
+        <span class="star" onclick="setRating(4)">★</span>
+        <span class="star" onclick="setRating(5)">★</span>
+      </div>
+      <textarea id="review-comment" placeholder="Share your experience..."></textarea>
+      <button onclick="submitReview()">Submit Review</button>
+      <p id="review-msg"></p>
+    </div>
+
+    <div id="reviews-list">
+      <p>Loading reviews...</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>&copy; 2026 Ubuntu Market</p>
+  <a href="about.html">About</a> |
+  <a href="contact.html">Contact</a>
+</footer>
+
+<script>
+const params    = new URLSearchParams(window.location.search);
+const productId = params.get('id');
+let currentProduct = null;
+let selectedRating = 0;
+
+// Load product details
+function loadProduct(){
+  if(!productId){
+    document.getElementById('product-name').innerText = 'No product selected.';
+    return;
+  }
+
+  fetch(`getProductDetail.php?id=${productId}`)
+  .then(res => res.json())
+  .then(p => {
+    if(!p || p.error){
+      document.getElementById('product-name').innerText = 'Product not found.';
+      return;
+    }
+
+    currentProduct = p;
+
+    document.getElementById('product-name').innerText     = p.name;
+    document.getElementById('product-price').innerText    = 'R' + parseFloat(p.price).toFixed(2);
+    document.getElementById('product-desc').innerText     = p.description;
+    document.getElementById('product-category').innerText = 'Category: ' + p.category;
+    document.getElementById('seller-name').innerText      = p.seller_name;
+    document.title = p.name + ' | Ubuntu Market';
+
+    const img   = document.getElementById('product-img');
+    img.src     = 'images/' + p.image;
+    img.alt     = p.name;
+    img.onerror = function(){ this.src = 'images/placeholder.jpg'; };
+  })
+  .catch(() => {
+    document.getElementById('product-name').innerText = 'Error loading product.';
+  });
+}
+
+// Load reviews
+function loadReviews(){
+  if(!productId) return;
+
+  fetch(`getReviews.php?product_id=${productId}`)
+  .then(res => res.json())
+  .then(reviews => {
+    const list = document.getElementById('reviews-list');
+
+    if(reviews.length == 0){
+      list.innerHTML = '<p style="color:#999;">No reviews yet. Be the first!</p>';
+      return;
+    }
+
+    list.innerHTML = reviews.map(r => `
+      <div class="review-card">
+        <strong>${r.buyer_name}</strong>
+        <span style="color:gold; margin-left:10px;">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+        <p style="margin:8px 0;">${r.comment}</p>
+        <small style="color:#999;">${r.created_at}</small>
+      </div>
+    `).join('');
+  });
+}
+
+// Star rating
+function setRating(rating){
+  selectedRating = rating;
+  const stars = document.querySelectorAll('.star');
+  stars.forEach((s, i) => {
+    s.style.color = i < rating ? 'gold' : '#ccc';
+  });
+}
+
+// Submit review
+function submitReview(){
+  const comment = document.getElementById('review-comment').value.trim();
+  const msg     = document.getElementById('review-msg');
+
+  if(selectedRating == 0){
+    msg.style.color   = 'red';
+    msg.innerText     = 'Please select a star rating!';
+    return;
+  }
+  if(!comment){
+    msg.style.color   = 'red';
+    msg.innerText     = 'Please write a comment!';
+    return;
+  }
+
+  fetch('addReview.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: `product_id=${productId}&rating=${selectedRating}&comment=${encodeURIComponent(comment)}`
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.status == 'success'){
+      msg.style.color  = 'green';
+      msg.innerText    = 'Review submitted!';
+      document.getElementById('review-comment').value = '';
+      setRating(0);
+      loadReviews();
+    } else if(data.status == 'exists'){
+      msg.style.color  = 'orange';
+      msg.innerText    = 'You already reviewed this product!';
+    } else if(data.status == 'login'){
+      alert('Please login to leave a review!');
+      window.location.href = 'login.html';
+    } else {
+      msg.style.color  = 'red';
+      msg.innerText    = 'Something went wrong.';
+    }
+  });
+}
+
+// Add to cart
+function addToCart(){
+  if(!currentProduct) return;
+
+  const qty = parseInt(document.getElementById('qty').value);
+
+  fetch('cart.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: `product_id=${currentProduct.id}&quantity=${qty}`
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.status == 'login'){
+      alert('Please login to add to cart!');
+      window.location.href = 'login.html';
+    } else {
+      alert(qty + 'x ' + currentProduct.name + ' added to cart!');
+    }
+  });
+}
+
+// Message seller
+function messageSeller(){
+  if(!currentProduct) return;
+  window.location.href = 
+    `buyerMess.php?seller_id=${currentProduct.seller_id}&product_id=${currentProduct.id}`;
+}
+function buyNow(event) {
+    // Prevent the browser from reloading the page or submitting a form automatically
+    if (event) event.preventDefault();
+
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get('id');
+    
+    const quantityInput = document.getElementById('product-quantity') || document.getElementById('quantity');
+    const quantity = quantityInput ? quantityInput.value : 1;
+
+    if (!productId) {
+        alert("Error: Missing product ID in the URL link.");
+        return;
+    }
+
+    fetch('cart.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `product_id=${productId}&quantity=${quantity}`
+    })
+    .then(response => response.text())
+    .then(text => {
+        try {
+            const data = JSON.parse(text);
+            if (data.status === 'success' || data.success === true) {
+            
+                window.location.href = 'Shoppingcart.html'; 
+            } else {
+                alert("Cart Error: " + (data.message || "Could not add item. Check if your session is active."));
+            }
+        } catch (jsonError) {
+            console.error("Raw response from server was:", text);
+            alert("The server sent back an unexpected response. Check your console log!");
+        }
+    })
+    .catch(networkError => {
+        console.error('Fetch operation failed:', networkError);
+        alert("Connection Error: Failed to communicate with cart.php");
+    });
+}
+
+loadProduct();
+loadReviews();
+</script>
+
+</body>
+</html>
